@@ -34,14 +34,19 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" misplaced="YES" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="iPC-HI-Obc">
+                                <rect key="frame" x="290" y="296" width="20" height="20"/>
+                            </activityIndicatorView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="noimage" translatesAutoresizingMaskIntoConstraints="NO" id="2Bz-ae-FVv">
                                 <rect key="frame" x="14" y="20" width="560" height="572"/>
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="iPC-HI-Obc" firstAttribute="centerY" secondItem="2Bz-ae-FVv" secondAttribute="centerY" id="KRR-ST-Fpm"/>
                             <constraint firstAttribute="trailingMargin" secondItem="2Bz-ae-FVv" secondAttribute="trailing" constant="6" id="PbO-aa-U2H"/>
                             <constraint firstItem="2Bz-ae-FVv" firstAttribute="leading" secondItem="Q6D-8L-qqV" secondAttribute="leadingMargin" constant="-6" id="Z81-tt-BFb"/>
+                            <constraint firstItem="iPC-HI-Obc" firstAttribute="centerX" secondItem="Q6D-8L-qqV" secondAttribute="centerX" id="jbS-al-WWB"/>
                             <constraint firstItem="adE-eg-0LB" firstAttribute="top" secondItem="2Bz-ae-FVv" secondAttribute="bottom" constant="8" symbolic="YES" id="vGY-IM-2VD"/>
                             <constraint firstItem="2Bz-ae-FVv" firstAttribute="top" secondItem="j0p-7T-Qtq" secondAttribute="bottom" id="xaI-QJ-DtS"/>
                         </constraints>
@@ -49,6 +54,7 @@
                     <navigationItem key="navigationItem" id="fOY-jx-G4r"/>
                     <connections>
                         <outlet property="imageView" destination="2Bz-ae-FVv" id="byU-Up-Cst"/>
+                        <outlet property="spinner" destination="iPC-HI-Obc" id="Aer-ip-hKp"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="EpV-Vd-KZw" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -205,7 +211,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="w1Y-9G-3Ad" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2798" y="-418"/>
+            <point key="canvasLocation" x="2933" y="-387"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="ybz-HD-Kbs">

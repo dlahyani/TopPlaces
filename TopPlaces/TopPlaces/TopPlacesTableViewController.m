@@ -29,8 +29,11 @@ NS_ASSUME_NONNULL_BEGIN
     dispatch_async(dispatch_get_main_queue(), ^(void){
       [self.refreshControl endRefreshing];
       self.photos = photos;
+      [self.tableView reloadData];
     });
   });
+  
+ 
 }
 @end
 

@@ -5,8 +5,9 @@
 #import "TopPlacesDetailsPhotoViewController.h"
 #import "FlickrFetcher.h"
 NS_ASSUME_NONNULL_BEGIN
-@interface PlacesTableViewController() <UISplitViewControllerDelegate>
 
+@interface PlacesTableViewController() <UISplitViewControllerDelegate>
+@property (weak, nonatomic)  NSDictionary *selectedPhoto;
 @end
 @implementation PlacesTableViewController
 
@@ -18,11 +19,9 @@ NS_ASSUME_NONNULL_BEGIN
   [self fetchPhotos];
   
 }
-
-// fetch photos from Flickr and set them in self.photos
-- (IBAction)refreshTableCells
+- (void) fetchPhotos
 {
-  [self fetchPhotos];
+  //no nothing - abstract
 }
 
 - (void) prepareForSegue:(UIStoryboardSegue *)segue sender:(__nullable id)sender
@@ -32,7 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
     NSLog(@"prepareForSegue: show details");
     UINavigationController *nvc = (UINavigationController *)segue.destinationViewController;
     TopPlacesDetailsPhotoViewController *dvc = (TopPlacesDetailsPhotoViewController *)  nvc.viewControllers[0];
-    dvc.photoUrl = [FlickrFetcher URLforTopPlaces];
+    dvc.photoUrl = [FlickrFetcher URLforPhoto:self.selectedPhoto format:FlickrPhotoFormatOriginal];
   }
   
 }
@@ -40,7 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (NSInteger) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-  return 2;
+  return [self.photos count];
 }
 
 
@@ -48,8 +47,9 @@ NS_ASSUME_NONNULL_BEGIN
 {
   UITableViewCell *cell;
   cell = [self.tableView dequeueReusableCellWithIdentifier:@"FlickrPhotoCell"];
-  cell.textLabel.text = @"1asdasd";
-  cell.detailTextLabel.text = @"hey";
+  NSArray *placesInfo =  [[self.photos[indexPath.row] valueForKeyPath:FLICKR_PLACE_NAME] componentsSeparatedByString:@", "];
+  cell.textLabel.text = [placesInfo firstObject];
+  cell.detailTextLabel.text = [placesInfo lastObject];
 
   return cell;
 }
@@ -57,6 +57,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
   NSLog(@"selected item at section: %@ row: %@", @(indexPath.section), @(indexPath.row));
+  
+  self.selectedPhoto = self.photos[indexPath.row];
   [self performSegueWithIdentifier:@"showDetailImage" sender:self];
 
 }
