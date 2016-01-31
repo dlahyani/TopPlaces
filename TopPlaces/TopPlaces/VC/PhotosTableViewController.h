@@ -3,7 +3,10 @@
 
 #import "UIKit/UIKit.h"
 NS_ASSUME_NONNULL_BEGIN
-@interface PlacesTableViewController : UITableViewController
+
+@interface PhotosTableViewController : UITableViewController
+- (void) fetchPhotos;   //abstract
+@property (strong, nonatomic) NSArray *photosInfo;
 @end
 
 NS_ASSUME_NONNULL_END
