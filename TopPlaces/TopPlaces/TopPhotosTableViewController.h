@@ -1,15 +1,10 @@
 // Copyright (c) 2016 Lightricks. All rights reserved.
 // Created by Gennadi Iosad.
 
-#import "HistoryPlacesTableViewController.h"
-
+#import "PlacesTableViewController.h"
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation HistoryPlacesTableViewController
-
-- (void) fetchPhotos
-{
-}
+@interface TopPhotosTableViewController : PlacesTableViewController
 
 @end
 

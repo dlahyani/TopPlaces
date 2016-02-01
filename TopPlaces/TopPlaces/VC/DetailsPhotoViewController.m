@@ -1,16 +1,16 @@
 // Copyright (c) 2016 Lightricks. All rights reserved.
 // Created by Gennadi Iosad.
 
-#import "TopPlacesDetailsPhotoViewController.h"
+#import "DetailsPhotoViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface TopPlacesDetailsPhotoViewController()
+@interface DetailsPhotoViewController()
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *spinner;
 
 @end
-@implementation TopPlacesDetailsPhotoViewController
+@implementation DetailsPhotoViewController
 - (void)setPhotoUrl:(NSURL*) url
 {
   _photoUrl = url;

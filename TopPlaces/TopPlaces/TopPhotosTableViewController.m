@@ -1,12 +1,12 @@
 // Copyright (c) 2016 Lightricks. All rights reserved.
 // Created by Gennadi Iosad.
 
-#import "TopPlacesTableViewController.h"
+#import "TopPhotosTableViewController.h"
 
 #import "FlickrFetcher.h"
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation TopPlacesTableViewController
+@implementation TopPhotosTableViewController
 - (void) viewDidLoad
 {
   [super viewDidLoad];
