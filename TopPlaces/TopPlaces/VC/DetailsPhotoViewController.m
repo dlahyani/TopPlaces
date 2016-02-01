@@ -17,6 +17,16 @@ NS_ASSUME_NONNULL_BEGIN
   [super viewDidLoad];
   NSLog(@"DetailsPhotoViewController::viewDidLoad self %p", self);
 }
+
+- (void) viewDidAppear:(BOOL)animated
+{
+  [super viewDidAppear:animated];
+  if (self.photoInfo) {
+    [self.spinner startAnimating];
+  }
+}
+
+
 - (void)setPhotoInfo:(NSDictionary *)photoInfo
 {
   _photoInfo = photoInfo;
@@ -27,7 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 //  }
   photoUrl = [FlickrFetcher URLforPhoto:self.photoInfo format:FlickrPhotoFormatLarge];
   NSLog(@"TopPlacesDetailsPhotoViewController %p::setPhotoInfo %p", self, self.photoInfo);
-  [self.spinner startAnimating];
+//  [self.spinner startAnimating]; //can't happen before the view appeared TODO review
   dispatch_queue_t fetchPhoto = dispatch_queue_create("picture of photo", NULL);
   dispatch_async(fetchPhoto, ^(void){
     NSData *imageData = [NSData dataWithContentsOfURL:photoUrl];
