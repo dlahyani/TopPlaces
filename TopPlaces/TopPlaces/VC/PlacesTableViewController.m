@@ -2,12 +2,12 @@
 // Created by Gennadi Iosad.
 
 #import "PlacesTableViewController.h"
-#import "DetailsPhotoViewController.h"
+#import "TopPhotosTableViewController.h"
 #import "FlickrFetcher.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @interface PlacesTableViewController() <UISplitViewControllerDelegate>
-@property (weak, nonatomic)  NSDictionary *selectedPhoto;
+@property (strong, nonatomic) NSArray *places;
 @end
 @implementation PlacesTableViewController
 
@@ -16,22 +16,39 @@ NS_ASSUME_NONNULL_BEGIN
 {
   self.splitViewController.delegate = self;
   self.splitViewController.preferredDisplayMode = UISplitViewControllerDisplayModeAllVisible;
-  [self fetchPhotos];
+  [self fetchPlaces];
+}
+
+
+
+- (void) fetchPlaces
+{
+  [self.refreshControl beginRefreshing];
+  NSURL *url = [FlickrFetcher URLforTopPlaces];
+  dispatch_queue_t fetchPhoto = dispatch_queue_create("flickr fetcher", NULL);
+  dispatch_async(fetchPhoto, ^(void){
+    NSData *jsonResults = [NSData dataWithContentsOfURL:url];
+    NSDictionary *propertyListResults = [NSJSONSerialization JSONObjectWithData:jsonResults options:0 error:NULL];
+    NSArray *places = [propertyListResults valueForKeyPath:FLICKR_RESULTS_PLACES];
+    dispatch_async(dispatch_get_main_queue(), ^(void){
+      [self.refreshControl endRefreshing];
+      self.places = places;
+      [self.tableView reloadData];
+    });
+  });
+  
   
 }
-- (void) fetchPhotos
-{
-  //no nothing - abstract
-}
+
+
 
 - (void) prepareForSegue:(UIStoryboardSegue *)segue sender:(__nullable id)sender
 {
   NSLog(@"prepareForSegue");
   if ([segue.identifier isEqualToString:@"showPhotosOfPlace"]) {
     NSLog(@"prepareForSegue: showPhotosOfPlaces");
-//    UINavigationController *nvc = (UINavigationController *)segue.destinationViewController;
-//    TopPlacesDetailsPhotoViewController *dvc = (TopPlacesDetailsPhotoViewController *)  nvc.viewControllers[0];
-//    dvc.photoUrl = [FlickrFetcher URLforPhoto:self.selectedPhoto format:FlickrPhotoFormatOriginal];
+    TopPhotosTableViewController *tpvc = (TopPhotosTableViewController *)segue.destinationViewController;
+    tpvc.placeInfo = self.places[((UITableViewCell *)sender).tag];
 
   } else if ([segue.identifier isEqualToString:@"showDetailImage"]) {
     NSLog(@"prepareForSegue: show details");
@@ -39,16 +56,13 @@ NS_ASSUME_NONNULL_BEGIN
 //    TopPlacesDetailsPhotoViewController *dvc = (TopPlacesDetailsPhotoViewController *)  nvc.viewControllers[0];
 //    dvc.photoUrl = [FlickrFetcher URLforPhoto:self.selectedPhoto format:FlickrPhotoFormatOriginal];
   }
-
-  
-  
-  
 }
+
 #pragma mark - table view controller overrides
 
 - (NSInteger) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-  return [self.photos count];
+  return [self.places count];
 }
 
 
@@ -56,12 +70,13 @@ NS_ASSUME_NONNULL_BEGIN
 {
   UITableViewCell *cell;
   cell = [self.tableView dequeueReusableCellWithIdentifier:@"FlickrPhotoCell"];
-  NSArray *placesInfo =  [[self.photos[indexPath.row] valueForKeyPath:FLICKR_PLACE_NAME] componentsSeparatedByString:@", "];
+  NSArray *placesInfo =  [[self.places[indexPath.row] valueForKeyPath:FLICKR_PLACE_NAME] componentsSeparatedByString:@", "];
   cell.textLabel.text = [placesInfo firstObject];
   cell.detailTextLabel.text = [placesInfo lastObject];
-
+  cell.tag = indexPath.row;
   return cell;
 }
+
 //
 //- (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 //{

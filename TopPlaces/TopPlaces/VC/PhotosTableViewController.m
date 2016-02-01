@@ -1,9 +1,15 @@
 // Copyright (c) 2016 Lightricks. All rights reserved.
 // Created by Gennadi Iosad.
 
-#import "UIKit/UIKit.h"
+#import "PhotosTableViewController.h"
+
 NS_ASSUME_NONNULL_BEGIN
-@interface PlacesTableViewController : UITableViewController
+
+@implementation PhotosTableViewController
+- (void) fetchPhotos
+{
+  //abstract
+}
 @end
 
 NS_ASSUME_NONNULL_END

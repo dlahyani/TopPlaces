@@ -1,11 +1,11 @@
 // Copyright (c) 2016 Lightricks. All rights reserved.
 // Created by Gennadi Iosad.
 
-#import "PlacesTableViewController.h"
+#import "UIKit/UIKit.h"
 NS_ASSUME_NONNULL_BEGIN
 
-@interface RecentPhotosTableViewController : PlacesTableViewController
-
+@interface PhotosTableViewController : UITableViewController
+- (void) fetchPhotos;   //abstract
 @end
 
 NS_ASSUME_NONNULL_END
