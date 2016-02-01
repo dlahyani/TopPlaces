@@ -17,9 +17,15 @@ NS_ASSUME_NONNULL_BEGIN
 {
   self.splitViewController.delegate = self;
   self.splitViewController.preferredDisplayMode = UISplitViewControllerDisplayModeAllVisible;
+  [self.refreshControl addTarget:self action:@selector(handleRefresh:) forControlEvents:UIControlEventValueChanged];
   [self fetchPlaces];
 }
 
+
+
+- (void) handleRefresh:(UIRefreshControl *)refreshControl {
+  [self fetchPlaces];
+}
 
 
 - (void) fetchPlaces
