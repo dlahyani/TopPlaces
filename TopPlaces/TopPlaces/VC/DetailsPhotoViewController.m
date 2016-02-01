@@ -21,6 +21,11 @@ NS_ASSUME_NONNULL_BEGIN
 {
   _photoInfo = photoInfo;
   NSURL *photoUrl = [FlickrFetcher URLforPhoto:self.photoInfo format:FlickrPhotoFormatOriginal];
+//TODO: enable this when done
+  //  if (!photoUrl) {
+//    photoUrl = [FlickrFetcher URLforPhoto:self.photoInfo format:FlickrPhotoFormatLarge];
+//  }
+  photoUrl = [FlickrFetcher URLforPhoto:self.photoInfo format:FlickrPhotoFormatLarge];
   NSLog(@"TopPlacesDetailsPhotoViewController %p::setPhotoInfo %p", self, self.photoInfo);
   [self.spinner startAnimating];
   dispatch_queue_t fetchPhoto = dispatch_queue_create("picture of photo", NULL);
@@ -29,6 +34,10 @@ NS_ASSUME_NONNULL_BEGIN
     dispatch_async(dispatch_get_main_queue(), ^(void){
       self.imageView.image = [UIImage imageWithData:imageData];
       [self.spinner stopAnimating];
+//      NSString *photoTitle =  //      NSString *photoDetails =  [self.photosInfo[indexPath.row] valueForKeyPath:FLICKR_PHOTO_DESCRIPTION];
+//      todo:fix
+      self.title = [self.photoInfo valueForKeyPath:FLICKR_PHOTO_TITLE];
+
     });
   });
 }

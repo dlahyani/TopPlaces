@@ -10,7 +10,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) viewDidLoad
 {
   [super viewDidLoad];
- //todo: do we need this [self.refreshControl addTarget:self action:@selector(handleRefresh:) forControlEvents:UIControlEventValueChanged];
+  [self.refreshControl addTarget:self action:@selector(handleRefresh:) forControlEvents:UIControlEventValueChanged];
 }
 
 - (void) handleRefresh:(UIRefreshControl *)refreshControl {
