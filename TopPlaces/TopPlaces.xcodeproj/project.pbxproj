@@ -108,12 +108,12 @@
 		30DA5FEB1C5E0012007F7A62 /* VC */ = {
 			isa = PBXGroup;
 			children = (
+				308690B51C5F5290004E930B /* PlacesTableViewController.h */,
+				308690B61C5F5290004E930B /* PlacesTableViewController.m */,
 				308690B11C5F5290004E930B /* DetailsPhotoViewController.h */,
 				308690B21C5F5290004E930B /* DetailsPhotoViewController.m */,
 				308690B31C5F5290004E930B /* PhotosTableViewController.h */,
 				308690B41C5F5290004E930B /* PhotosTableViewController.m */,
-				308690B51C5F5290004E930B /* PlacesTableViewController.h */,
-				308690B61C5F5290004E930B /* PlacesTableViewController.m */,
 				308690B71C5F5290004E930B /* RecentPhotosTableViewController.h */,
 				308690B81C5F5290004E930B /* RecentPhotosTableViewController.m */,
 				308690B91C5F5290004E930B /* TopPhotosTableViewController.h */,

@@ -4,7 +4,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface DetailsPhotoViewController : UIViewController
-@property (strong, nonatomic) NSURL* photoUrl;
+@property (strong, nonatomic) NSDictionary *photoInfo;
 @end
 
 NS_ASSUME_NONNULL_END
