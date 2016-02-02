@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void) viewDidLoad
 {
+  [super viewDidLoad];
   self.splitViewController.delegate = self;
   self.splitViewController.preferredDisplayMode = UISplitViewControllerDisplayModeAllVisible;
   [self.refreshControl addTarget:self action:@selector(handleRefresh:) forControlEvents:UIControlEventValueChanged];
