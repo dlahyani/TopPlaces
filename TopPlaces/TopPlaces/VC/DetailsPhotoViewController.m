@@ -73,7 +73,7 @@ NS_ASSUME_NONNULL_BEGIN
   //  if (!photoUrl) {
 //    photoUrl = [FlickrFetcher URLforPhoto:self.photoInfo format:FlickrPhotoFormatLarge];
 //  }
-
+  __weak DetailsPhotoViewController *weakSelf = self;
   //NSLog(@"TopPlacesDetailsPhotoViewController %p::setPhotoInfo %p", self, self.photoInfo);
   [self.spinner startAnimating]; //can't happen before the view appeared TODO review
   dispatch_queue_t fetchPhoto = dispatch_queue_create("picture of photo", NULL);
@@ -84,22 +84,27 @@ NS_ASSUME_NONNULL_BEGIN
     NSLog(@"img loaded %p", img);
     //show it
     dispatch_async(dispatch_get_main_queue(), ^(void){
-      [self.spinner stopAnimating];
+      [weakSelf.spinner stopAnimating];
+      
+      //if download failed
+      if (!img) {
+        weakSelf.noImageLoadedView.hidden = NO;
+        return;
+      }
 
-      self.title = [self.photoInfo valueForKeyPath:FLICKR_PHOTO_TITLE];
+      weakSelf.title = [weakSelf.photoInfo valueForKeyPath:FLICKR_PHOTO_TITLE];
       
       //if no title go with description
-      if ([self.title length] == 0) {
-        self.title = [self.photoInfo valueForKeyPath:FLICKR_PHOTO_DESCRIPTION];
+      if ([weakSelf.title length] == 0) {
+        weakSelf.title = [weakSelf.photoInfo valueForKeyPath:FLICKR_PHOTO_DESCRIPTION];
       }
- 
-      self.imageView = [[UIImageView alloc] initWithImage:img];
-      self.imageView.frame = CGRectMake(0, 0, img.size.width, img.size.height);
+      weakSelf.imageView = [[UIImageView alloc] initWithImage:img];
+      weakSelf.imageView.frame = CGRectMake(0, 0, img.size.width, img.size.height);
       
-      [self.scrollView addSubview:self.imageView];
-      self.scrollView.contentSize = self.imageView.bounds.size;
-      self.scrollView.scrollIndicatorInsets   = UIEdgeInsetsMake(0, 0, 0, 0); //TODO: why do we need this, why scrollView origin is not 0
-      self.scrollView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);//TODO: why do we need this
+      [weakSelf.scrollView addSubview:weakSelf.imageView];
+      weakSelf.scrollView.contentSize = weakSelf.imageView.bounds.size;
+      weakSelf.scrollView.scrollIndicatorInsets   = UIEdgeInsetsMake(0, 0, 0, 0); //TODO: why do we need this, why scrollView origin is not 0
+      weakSelf.scrollView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);//TODO: why do we need this
     });
   });
 }
