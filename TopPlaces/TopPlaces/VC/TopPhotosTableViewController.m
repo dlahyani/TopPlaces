@@ -16,6 +16,13 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) handleRefresh:(UIRefreshControl *)refreshControl {
   [self fetchPhotos];
 }
+
+- (void) viewDidDisappear:(BOOL)animated
+{
+  [super viewDidAppear:animated];
+  [self.refreshControl beginRefreshing];
+
+}
 // fetch photos from Flickr from a certain place and set them in self.photos
 - (IBAction) fetchPhotos
 {
