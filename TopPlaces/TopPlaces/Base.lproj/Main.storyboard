@@ -103,7 +103,7 @@
                                     </subviews>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <segue destination="Lmr-j3-iYr" kind="showDetail" id="8OM-O7-RIc"/>
+                                    <segue destination="Lmr-j3-iYr" kind="showDetail" identifier="showPhoto" id="8OM-O7-RIc"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -328,7 +328,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YRT-q8-2lj">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YRT-q8-2lj">
                                 <rect key="frame" x="0.0" y="64" width="600" height="536"/>
                                 <color key="backgroundColor" red="0.80000001190000003" green="0.80000001190000003" blue="0.80000001190000003" alpha="1" colorSpace="calibratedRGB"/>
                             </scrollView>
@@ -371,7 +371,7 @@
         <image name="topplaces" width="27" height="26"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="VYZ-Vg-Yvl"/>
+        <segue reference="8OM-O7-RIc"/>
         <segue reference="b4f-D3-mjQ"/>
     </inferredMetricsTieBreakers>
 </document>
