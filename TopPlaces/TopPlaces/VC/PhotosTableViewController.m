@@ -5,6 +5,9 @@
 #import "DetailsPhotoViewController.h"
 #import "FlickrFetcher.h"
 NS_ASSUME_NONNULL_BEGIN
+@interface PhotosTableViewController()
+
+@end
 
 @implementation PhotosTableViewController
 
@@ -12,8 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 {
   [super viewDidLoad];
   [self fetchPhotos];
+  
 }
-
 
 - (void) fetchPhotos
 {

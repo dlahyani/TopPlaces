@@ -3,6 +3,7 @@
 
 #import "DetailsPhotoViewController.h"
 #import "FlickrFetcher.h"
+#import "PhotosHistory.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @interface DetailsPhotoViewController()<UIScrollViewDelegate>
@@ -26,7 +27,10 @@ NS_ASSUME_NONNULL_BEGIN
   doubleTapRecognizer.numberOfTapsRequired = 2;
   doubleTapRecognizer.numberOfTouchesRequired = 1;
   [self.scrollView addGestureRecognizer:doubleTapRecognizer];
- 
+  
+  if (self.photoInfo && !self.imageView) { //if info supplied but image is not loaded yet
+    [self loadImage:self.photoInfo];
+  }
   
   NSLog(@"DetailsPhotoViewController::viewDidLoad self %p", self);
 }
@@ -34,7 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)scrollViewTwoFingerTapped:(UITapGestureRecognizer*)recognizer
 {
-  //in already zoomed out - zoom in a bit
+  //if already zoomed out - zoom in a bit
   if (self.scrollView.zoomScale == self.scrollView.minimumZoomScale) {
     [self.scrollView setZoomScale:self.scrollView.zoomScale*1.5 animated:YES];
   } else {
@@ -44,38 +48,33 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 
-- (void) viewDidAppear:(BOOL)animated
-{
-  [super viewDidAppear:animated];
-  if (self.photoInfo && !self.imageView) { //if info supplied but image is not loaded yet
-    self.noImageLoadedView.hidden = YES;
-    [self loadImage:self.photoInfo];
-  }
-}
-
 - (void) viewDidLayoutSubviews
 {
   [super viewDidLayoutSubviews];
   
-//  NSLog(@"DetailsPhotoViewController::viewDidLayoutSubviews");
-  
-  if (self.imageView) {
-    [self aspectFitImage];
-  }
+  NSLog(@"DetailsPhotoViewController::viewDidLayoutSubviews");
+//  
+//  if (self.imageView) {
+//    [self aspectFitImage];
+//  }
   
 }
 
 - (void)loadImage:(NSDictionary *)photoInfo
 {
-  _photoInfo = photoInfo;
+  [PhotosHistory addPhotoInfo:photoInfo];
   NSURL *photoUrl = [FlickrFetcher URLforPhoto:self.photoInfo format:FlickrPhotoFormatOriginal];
 //TODO: enable this when done
   //  if (!photoUrl) {
 //    photoUrl = [FlickrFetcher URLforPhoto:self.photoInfo format:FlickrPhotoFormatLarge];
 //  }
-  __weak DetailsPhotoViewController *weakSelf = self;
+  
   //NSLog(@"TopPlacesDetailsPhotoViewController %p::setPhotoInfo %p", self, self.photoInfo);
-  [self.spinner startAnimating]; //can't happen before the view appeared TODO review
+
+  self.noImageLoadedView.hidden = YES;
+  [self.spinner startAnimating];
+
+  __weak DetailsPhotoViewController *weakSelf = self;
   dispatch_queue_t fetchPhoto = dispatch_queue_create("picture of photo", NULL);
   dispatch_async(fetchPhoto, ^(void){
     //get the image
@@ -105,6 +104,9 @@ NS_ASSUME_NONNULL_BEGIN
       weakSelf.scrollView.contentSize = weakSelf.imageView.bounds.size;
       weakSelf.scrollView.scrollIndicatorInsets   = UIEdgeInsetsMake(0, 0, 0, 0); //TODO: why do we need this, why scrollView origin is not 0
       weakSelf.scrollView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);//TODO: why do we need this
+      
+      [weakSelf aspectFitImage];
+
     });
   });
 }

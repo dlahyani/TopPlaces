@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		30210C8B1C61F07900B18099 /* PhotosHistory.m in Sources */ = {isa = PBXBuildFile; fileRef = 30210C8A1C61F07900B18099 /* PhotosHistory.m */; };
 		30730E7C1C57D4A6001B3668 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 30730E7B1C57D4A6001B3668 /* main.m */; };
 		30730E7F1C57D4A6001B3668 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 30730E7E1C57D4A6001B3668 /* AppDelegate.m */; };
 		30730E851C57D4A6001B3668 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 30730E831C57D4A6001B3668 /* Main.storyboard */; };
@@ -21,6 +22,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		30210C891C61F07900B18099 /* PhotosHistory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotosHistory.h; sourceTree = "<group>"; };
+		30210C8A1C61F07900B18099 /* PhotosHistory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotosHistory.m; sourceTree = "<group>"; };
 		30730E771C57D4A6001B3668 /* TopPlaces.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TopPlaces.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		30730E7B1C57D4A6001B3668 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		30730E7D1C57D4A6001B3668 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -101,6 +104,8 @@
 				30DA5FE21C5DFB91007F7A62 /* FlickrAPIKey.h */,
 				30DA5FE31C5DFB91007F7A62 /* FlickrFetcher.h */,
 				30DA5FE41C5DFB91007F7A62 /* FlickrFetcher.m */,
+				30210C891C61F07900B18099 /* PhotosHistory.h */,
+				30210C8A1C61F07900B18099 /* PhotosHistory.m */,
 			);
 			name = Logic;
 			sourceTree = "<group>";
@@ -195,6 +200,7 @@
 			files = (
 				308690BF1C5F5290004E930B /* TopPhotosTableViewController.m in Sources */,
 				308690BC1C5F5290004E930B /* PhotosTableViewController.m in Sources */,
+				30210C8B1C61F07900B18099 /* PhotosHistory.m in Sources */,
 				308690BD1C5F5290004E930B /* PlacesTableViewController.m in Sources */,
 				30730E7F1C57D4A6001B3668 /* AppDelegate.m in Sources */,
 				308690BE1C5F5290004E930B /* RecentPhotosTableViewController.m in Sources */,
