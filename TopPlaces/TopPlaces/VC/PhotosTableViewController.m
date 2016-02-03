@@ -5,15 +5,27 @@
 #import "DetailsPhotoViewController.h"
 #import "FlickrFetcher.h"
 NS_ASSUME_NONNULL_BEGIN
+@interface PhotosTableViewController()
+@property (nonatomic) BOOL viewAppearedOnce;
+@end
 
 @implementation PhotosTableViewController
 
 - (void) viewDidLoad
 {
   [super viewDidLoad];
-  [self fetchPhotos];
+  
 }
 
+- (void) viewWillAppear:(BOOL)animated
+{
+  [super viewWillAppear:animated];
+  if (self.viewAppearedOnce) {
+    return;
+  }
+  self.viewAppearedOnce = YES;
+  [self fetchPhotos];
+}
 
 - (void) fetchPhotos
 {
