@@ -23,42 +23,75 @@ NS_ASSUME_NONNULL_BEGIN
   [super viewDidLoad];
   self.scrollView.delegate = self;
   
-  UITapGestureRecognizer *doubleTapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(scrollViewTwoFingerTapped:)];
+  UITapGestureRecognizer *doubleTapRecognizer =
+      [[UITapGestureRecognizer alloc] initWithTarget:self
+                                              action:@selector(scrollViewTwoFingerTapped:)];
+  
   doubleTapRecognizer.numberOfTapsRequired = 2;
   doubleTapRecognizer.numberOfTouchesRequired = 1;
   [self.scrollView addGestureRecognizer:doubleTapRecognizer];
-  
-  if (self.photoInfo && !self.imageView) { //if info supplied but image is not loaded yet
+  //in ipad info can be missing
+  if (self.photoInfo) {
     [self loadImage:self.photoInfo];
   }
   
   NSLog(@"DetailsPhotoViewController::viewDidLoad self %p", self);
 }
+//- (void)viewWillTransitionToSize:(CGSize)size
+//       withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
+//{
+//  if (self.imageView) {
+//    [self aspectFitImage];
+//  }
+//}
 
-
-- (void)scrollViewTwoFingerTapped:(UITapGestureRecognizer*)recognizer
+- (void)scrollViewDoubleFingerTapped:(UITapGestureRecognizer*)recognizer
 {
   //if already zoomed out - zoom in a bit
   if (self.scrollView.zoomScale == self.scrollView.minimumZoomScale) {
-    [self.scrollView setZoomScale:self.scrollView.zoomScale*1.5 animated:YES];
+    [self.scrollView setZoomScale:self.scrollView.zoomScale*2 animated:YES];
   } else {
     //zoom out
     [self.scrollView setZoomScale:self.scrollView.minimumZoomScale animated:YES];
   }
 }
 
-
+- (void) viewDidAppear:(BOOL)animated
+{
+  [super viewDidAppear:animated];
+  
+  NSLog(@"DetailsPhotoViewController::viewDidAppear");
+  
+}
 - (void) viewDidLayoutSubviews
 {
   [super viewDidLayoutSubviews];
   
   NSLog(@"DetailsPhotoViewController::viewDidLayoutSubviews");
 //  
+  if (self.imageView) {
+    [self aspectFitImage];
+  }
+  NSLog(@"imageView.frame %@", NSStringFromCGRect(self.imageView.frame));
+  NSLog(@"scrollView.frame %@", NSStringFromCGRect(self.scrollView.frame));
+  NSLog(@"---");
+  
+}
+//
+//- (void) viewWillLayoutSubviews
+//{
+//  [super viewWillLayoutSubviews];
+//  
+//  NSLog(@"DetailsPhotoViewController::viewWillLayoutSubviews");
+//  //
 //  if (self.imageView) {
 //    [self aspectFitImage];
 //  }
-  
-}
+//  NSLog(self.imageView.description);
+//  NSLog(self.scrollView.description);
+//  NSLog(@"---");
+//  
+//}
 
 - (void)loadImage:(NSDictionary *)photoInfo
 {
@@ -102,23 +135,23 @@ NS_ASSUME_NONNULL_BEGIN
       
       [weakSelf.scrollView addSubview:weakSelf.imageView];
       weakSelf.scrollView.contentSize = weakSelf.imageView.bounds.size;
-      weakSelf.scrollView.scrollIndicatorInsets   = UIEdgeInsetsMake(0, 0, 0, 0); //TODO: why do we need this, why scrollView origin is not 0
-      weakSelf.scrollView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);//TODO: why do we need this
       
-      [weakSelf aspectFitImage];
-
+      //TODO: why do we need this, why scrollView origin is not 0
+      weakSelf.scrollView.scrollIndicatorInsets   = UIEdgeInsetsMake(0, 0, 0, 0);
+      weakSelf.scrollView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);//TODO: why do we need this
     });
   });
 }
 
 
 
+// UIScrollViewDelegate method
 - (UIView * __nullable)viewForZoomingInScrollView:(UIScrollView *)scrollView
 {
   return self.imageView;
 }
 
-
+// UIScrollViewDelegate method
 - (void)scrollViewDidZoom:(UIScrollView *)scrollView {
   // The scroll view has zoomed, so you need to re-center the contents
   [self centerScrollViewContents];
@@ -127,11 +160,17 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)centerScrollViewContents
 {
+  NSLog(@"====centerScrollViewContents====");
+
   CGPoint imageViewCenter = self.imageView.center;
   //we image size after scroll's view transform - thus we take the frame
   CGSize imageViewSize = CGRectStandardize(self.imageView.frame).size;
   
   CGSize scrollViewSize = CGRectStandardize(self.scrollView.bounds).size;
+  NSLog(@"imageView.frame %@", NSStringFromCGRect(self.imageView.frame));
+  NSLog(@"scrollView.frame %@", NSStringFromCGRect(self.scrollView.frame));
+  NSLog(@"imageView.size %@", NSStringFromCGSize(imageViewSize));
+  NSLog(@"scrollView.size %@", NSStringFromCGSize(scrollViewSize));
 
   //touch the center only if scrollView exceeds the image
   
@@ -151,8 +190,10 @@ NS_ASSUME_NONNULL_BEGIN
   
 }
 
+
 - (void)aspectFitImage
 {
+  NSLog(@"====aspectFitImage====");
   CGSize scrollViewSize = CGRectStandardize(self.scrollView.bounds).size;
   CGSize imageSize = CGRectStandardize(self.imageView.bounds).size;
   
@@ -166,6 +207,8 @@ NS_ASSUME_NONNULL_BEGIN
   
   //start zoomed out
   [self.scrollView setZoomScale:self.scrollView.minimumZoomScale animated:NO];
+  
+  [self centerScrollViewContents ];
 }
 @end
 

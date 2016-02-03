@@ -3,6 +3,8 @@
 
 #import "UIKit/UIKit.h"
 NS_ASSUME_NONNULL_BEGIN
+
+/// VC for presenting a list of top Flickr places
 @interface PlacesTableViewController : UITableViewController
 @end
 
