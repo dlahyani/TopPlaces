@@ -24,9 +24,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 }
 // fetch photos from Flickr from a certain place and set them in self.photos
-- (IBAction) fetchPhotos
+- (void) fetchPhotos
 {
   [self.refreshControl beginRefreshing];
+  
+  //WA for refreshControl not appearing
+  self.tableView.contentOffset = CGPointMake(0, -CGRectGetHeight(self.refreshControl.frame));
+  
   dispatch_queue_t fetchPhoto = dispatch_queue_create("photos in place", NULL);
   dispatch_async(fetchPhoto, ^(void){
     NSURL *url = [FlickrFetcher URLforPhotosInPlace:[self.placeInfo valueForKeyPath:FLICKR_PLACE_ID] maxResults:50];

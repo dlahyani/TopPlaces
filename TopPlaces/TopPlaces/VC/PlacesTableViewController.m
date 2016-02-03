@@ -16,12 +16,16 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) viewDidLoad
 {
   [super viewDidLoad];
-  self.splitViewController.delegate = self;
-  self.splitViewController.preferredDisplayMode = UISplitViewControllerDisplayModeAllVisible;
   [self.refreshControl addTarget:self action:@selector(handleRefresh:) forControlEvents:UIControlEventValueChanged];
   [self fetchPlaces];
 }
 
+- (void)awakeFromNib {
+  [super awakeFromNib];
+  //this has t be done as early as possible
+  self.splitViewController.delegate = self;
+  self.splitViewController.preferredDisplayMode = UISplitViewControllerDisplayModeAllVisible;
+}
 
 
 - (void) handleRefresh:(UIRefreshControl *)refreshControl {
@@ -131,7 +135,6 @@ NS_ASSUME_NONNULL_BEGIN
 {
   return YES; //show master view by default
 }
-
 @end
 
 NS_ASSUME_NONNULL_END

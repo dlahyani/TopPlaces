@@ -15,12 +15,16 @@ NS_ASSUME_NONNULL_BEGIN
   [self.tableView reloadData];
 }
 
-- (void) viewDidLoad
-{
-  [super viewDidLoad];
-  self.splitViewController.delegate = self;
-}
 
+- (void) awakeFromNib
+{
+  [super awakeFromNib];
+  // do this early so the splitViewController will talk to the delegate
+  self.splitViewController.delegate = self;
+  self.splitViewController.preferredDisplayMode = UISplitViewControllerDisplayModeAllVisible;
+
+
+}
 - (void) viewWillAppear:(BOOL)animated
 {
   [super viewWillAppear:animated];
