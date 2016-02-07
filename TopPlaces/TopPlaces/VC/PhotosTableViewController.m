@@ -10,22 +10,19 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @implementation PhotosTableViewController
-
-- (void) viewDidLoad
-{
+#pragma mark - UIView overrides
+- (void) viewDidLoad {
   [super viewDidLoad];
   [self fetchPhotos];
-  
 }
 
-- (void) fetchPhotos
-{
+- (void) fetchPhotos {
   //abstract
+  assert(0);
 }
 
 
-- (void) prepareForSegue:(UIStoryboardSegue *)segue sender:(__nullable id)sender
-{
+- (void) prepareForSegue:(UIStoryboardSegue *)segue sender:(nullable id)sender {
   if ([segue.identifier isEqualToString:@"showPhoto"]) {
     NSLog(@"prepareForSegue: showPhoto");
     UINavigationController *nvc = (UINavigationController *)segue.destinationViewController;
@@ -36,22 +33,30 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 
-
-- (NSInteger) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
+#pragma mark - UITableViewDataSource overrides
+- (NSInteger) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
   return [self.photosInfo count];
 }
 
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(nonnull NSIndexPath *)indexPath
-{
+- (UITableViewCell *)tableView:(UITableView *)tableView
+         cellForRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
   UITableViewCell *cell;
   cell = [self.tableView dequeueReusableCellWithIdentifier:@"FlickrPhotoCell"];
   NSString *photoTitle =  [self.photosInfo[indexPath.row] valueForKeyPath:FLICKR_PHOTO_TITLE];
   NSString *photoDetails =  [self.photosInfo[indexPath.row] valueForKeyPath:FLICKR_PHOTO_DESCRIPTION];
   
-  cell.textLabel.text = photoTitle;
-  cell.detailTextLabel.text = photoDetails;
+  if (photoTitle.length) {
+    cell.textLabel.text = photoTitle;
+    cell.detailTextLabel.text = photoDetails;
+  } else if (photoDetails.length) {
+    cell.textLabel.text = photoDetails;
+    cell.detailTextLabel.text = @"";
+  } else {
+    cell.textLabel.text = @"no-title";
+  }
+  
+  
   return cell;
 }
 

@@ -16,16 +16,15 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @implementation DetailsPhotoViewController
+#pragma mark - UIView overrides
 
-
-- (void) viewDidLoad
-{
+- (void) viewDidLoad {
   [super viewDidLoad];
   self.scrollView.delegate = self;
   
   UITapGestureRecognizer *doubleTapRecognizer =
       [[UITapGestureRecognizer alloc] initWithTarget:self
-                                              action:@selector(scrollViewTwoFingerTapped:)];
+                                              action:@selector(scrollViewDoubleFingerTapped:)];
   
   doubleTapRecognizer.numberOfTapsRequired = 2;
   doubleTapRecognizer.numberOfTouchesRequired = 1;
@@ -37,16 +36,9 @@ NS_ASSUME_NONNULL_BEGIN
   
   NSLog(@"DetailsPhotoViewController::viewDidLoad self %p", self);
 }
-//- (void)viewWillTransitionToSize:(CGSize)size
-//       withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
-//{
-//  if (self.imageView) {
-//    [self aspectFitImage];
-//  }
-//}
 
-- (void)scrollViewDoubleFingerTapped:(UITapGestureRecognizer*)recognizer
-{
+
+- (void)scrollViewDoubleFingerTapped:(UITapGestureRecognizer*)recognizer {
   //if already zoomed out - zoom in a bit
   if (self.scrollView.zoomScale == self.scrollView.minimumZoomScale) {
     [self.scrollView setZoomScale:self.scrollView.zoomScale*2 animated:YES];
@@ -56,54 +48,47 @@ NS_ASSUME_NONNULL_BEGIN
   }
 }
 
-- (void) viewDidAppear:(BOOL)animated
-{
-  [super viewDidAppear:animated];
-  
+
+- (void) viewDidAppear:(BOOL)animated {
   NSLog(@"DetailsPhotoViewController::viewDidAppear");
-  
+  [super viewDidAppear:animated];
 }
-- (void) viewDidLayoutSubviews
-{
-  [super viewDidLayoutSubviews];
-  
+
+
+- (void) viewDidLayoutSubviews {
   NSLog(@"DetailsPhotoViewController::viewDidLayoutSubviews");
-//  
+  [super viewDidLayoutSubviews];
+
   if (self.imageView) {
     [self aspectFitImage];
   }
-  NSLog(@"imageView.frame %@", NSStringFromCGRect(self.imageView.frame));
-  NSLog(@"scrollView.frame %@", NSStringFromCGRect(self.scrollView.frame));
-  NSLog(@"---");
-  
 }
-//
-//- (void) viewWillLayoutSubviews
-//{
-//  [super viewWillLayoutSubviews];
-//  
-//  NSLog(@"DetailsPhotoViewController::viewWillLayoutSubviews");
-//  //
-//  if (self.imageView) {
-//    [self aspectFitImage];
-//  }
-//  NSLog(self.imageView.description);
-//  NSLog(self.scrollView.description);
-//  NSLog(@"---");
-//  
-//}
 
-- (void)loadImage:(NSDictionary *)photoInfo
-{
+#pragma mark - UIScrollViewDelegate impl
+- (nullable UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView {
+  return self.imageView;
+}
+
+- (void)scrollViewDidZoom:(UIScrollView *)scrollView {
+  // The scroll view has zoomed, so you need to re-center the contents
+  [self centerScrollViewContents];
+}
+
+
+#pragma mark - aux logic
+- (void)loadImage:(NSDictionary *)photoInfo {
   [PhotosHistory addPhotoInfo:photoInfo];
-  NSURL *photoUrl = [FlickrFetcher URLforPhoto:self.photoInfo format:FlickrPhotoFormatOriginal];
-//TODO: enable this when done
-  //  if (!photoUrl) {
-//    photoUrl = [FlickrFetcher URLforPhoto:self.photoInfo format:FlickrPhotoFormatLarge];
-//  }
   
-  //NSLog(@"TopPlacesDetailsPhotoViewController %p::setPhotoInfo %p", self, self.photoInfo);
+  NSURL *photoUrl = [FlickrFetcher URLforPhoto:self.photoInfo format:FlickrPhotoFormatOriginal];
 
+  if (!photoUrl) {
+    photoUrl = [FlickrFetcher URLforPhoto:self.photoInfo format:FlickrPhotoFormatLarge];
+  }
+  
+  if (!photoUrl) {
+    return;
+  }
+  
   self.noImageLoadedView.hidden = YES;
   [self.spinner startAnimating];
 
@@ -113,8 +98,9 @@ NS_ASSUME_NONNULL_BEGIN
     //get the image
     NSData *imageData = [NSData dataWithContentsOfURL:photoUrl];
     UIImage *img = [UIImage imageWithData:imageData];
-    NSLog(@"img loaded %p", img);
-    //show it
+    NSLog(@"img downloaded %p", img);
+    
+    //show it (on UI thread)
     dispatch_async(dispatch_get_main_queue(), ^(void){
       [weakSelf.spinner stopAnimating];
       
@@ -138,39 +124,18 @@ NS_ASSUME_NONNULL_BEGIN
       
       //TODO: why do we need this, why scrollView origin is not 0
       weakSelf.scrollView.scrollIndicatorInsets   = UIEdgeInsetsMake(0, 0, 0, 0);
-      weakSelf.scrollView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);//TODO: why do we need this
+      weakSelf.scrollView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
     });
   });
 }
 
 
-
-// UIScrollViewDelegate method
-- (UIView * __nullable)viewForZoomingInScrollView:(UIScrollView *)scrollView
-{
-  return self.imageView;
-}
-
-// UIScrollViewDelegate method
-- (void)scrollViewDidZoom:(UIScrollView *)scrollView {
-  // The scroll view has zoomed, so you need to re-center the contents
-  [self centerScrollViewContents];
-}
-
-
-- (void)centerScrollViewContents
-{
-  NSLog(@"====centerScrollViewContents====");
-
+- (void)centerScrollViewContents {
   CGPoint imageViewCenter = self.imageView.center;
   //we image size after scroll's view transform - thus we take the frame
   CGSize imageViewSize = CGRectStandardize(self.imageView.frame).size;
   
   CGSize scrollViewSize = CGRectStandardize(self.scrollView.bounds).size;
-  NSLog(@"imageView.frame %@", NSStringFromCGRect(self.imageView.frame));
-  NSLog(@"scrollView.frame %@", NSStringFromCGRect(self.scrollView.frame));
-  NSLog(@"imageView.size %@", NSStringFromCGSize(imageViewSize));
-  NSLog(@"scrollView.size %@", NSStringFromCGSize(scrollViewSize));
 
   //touch the center only if scrollView exceeds the image
   
@@ -182,18 +147,12 @@ NS_ASSUME_NONNULL_BEGIN
     imageViewCenter.y = scrollViewSize.height/2.0;
   }
   
-  //try to remove all the padding
-  self.scrollView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
-
   //this will put the image in the center and add the padding as needed
   self.imageView.center = imageViewCenter;
-  
 }
 
 
-- (void)aspectFitImage
-{
-  NSLog(@"====aspectFitImage====");
+- (void)aspectFitImage {
   CGSize scrollViewSize = CGRectStandardize(self.scrollView.bounds).size;
   CGSize imageSize = CGRectStandardize(self.imageView.bounds).size;
   
@@ -205,10 +164,20 @@ NS_ASSUME_NONNULL_BEGIN
   self.scrollView.zoomScale = self.scrollView.minimumZoomScale;
   self.scrollView.maximumZoomScale = 3;
   
-  //start zoomed out
+  //start zoomed out and centered
   [self.scrollView setZoomScale:self.scrollView.minimumZoomScale animated:NO];
-  
-  [self centerScrollViewContents ];
+  self.imageView.center = CGPointMake(scrollViewSize.width/2.0, scrollViewSize.height/2.0);
+}
+
+#pragma mark - for debug
+NSString *StrCGPoint(CGPoint p) {
+  return [NSString stringWithFormat:@"{%d, %d}", (int)p.x, (int)p.y];
+}
+
+
+NSString *StrCGRect(CGRect r) {
+  return [NSString stringWithFormat:@"o - {%d, %d}, s - {%d, %d}", (int)r.origin.x, (int)r.origin.y,
+              (int)r.size.width, (int)r.size.height];
 }
 @end
 
