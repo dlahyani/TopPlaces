@@ -13,8 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @implementation PlacesTableViewController
 
 #pragma mark - UIViewController overrides
-- (void) viewDidLoad
-{
+- (void) viewDidLoad {
   [super viewDidLoad];
   [self.refreshControl addTarget:self
                           action:@selector(handleRefresh:)
@@ -38,8 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 
-- (void) fetchPlaces
-{
+- (void) fetchPlaces {
   [self.refreshControl beginRefreshing];
   NSURL *url = [FlickrFetcher URLforTopPlaces];
   
@@ -74,13 +72,11 @@ NS_ASSUME_NONNULL_BEGIN
       [self.tableView reloadData];
     });
   });
-
 }
 
 
 // convert the places list to the country->places map
-+ (NSDictionary *)contriesMappingForPlacesArray:(NSArray*)places
-{
++ (NSDictionary *)contriesMappingForPlacesArray:(NSArray*)places {
   NSMutableDictionary *countryToPlacesMap = [[NSMutableDictionary alloc] init];
   for (NSDictionary *place in places) {
     NSArray *placesInfo =  [[place valueForKeyPath:FLICKR_PLACE_NAME]
@@ -117,8 +113,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 
-- (void) prepareForSegue:(UIStoryboardSegue *)segue sender:(__nullable id)sender
-{
+- (void) prepareForSegue:(UIStoryboardSegue *)segue sender:(__nullable id)sender {
   if ([segue.identifier isEqualToString:@"showPhotosOfPlace"]) {
     NSLog(@"prepareForSegue: showPhotosOfPlaces");
     
@@ -136,28 +131,25 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 #pragma mark - table view controller overrides
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
   return [self.sortedContries count];
 }
 
 
-- (nullable NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
-{
+- (nullable NSString *)tableView:(UITableView *)tableView
+         titleForHeaderInSection:(NSInteger)section {
   return self.sortedContries[section];
 }
 
 
-- (NSInteger) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
+- (NSInteger) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
   NSString *country = self.sortedContries[section];
   return [self.countryToPlacesMap[country] count];
 }
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView
-         cellForRowAtIndexPath:(nonnull NSIndexPath *)indexPath
-{
+         cellForRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
   UITableViewCell *cell;
   cell = [self.tableView dequeueReusableCellWithIdentifier:@"FlickrPlacesCell"];
   NSString *country = self.sortedContries[indexPath.section];
@@ -179,8 +171,7 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - split view delegates
 - (BOOL) splitViewController:(UISplitViewController *)splitViewController
     collapseSecondaryViewController:(UIViewController *)secondaryViewController
-          ontoPrimaryViewController:(UIViewController *)primaryViewController
-{
+    ontoPrimaryViewController:(UIViewController *)primaryViewController {
   return YES; //show master view by default
 }
 @end

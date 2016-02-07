@@ -26,8 +26,9 @@ NS_ASSUME_NONNULL_BEGIN
   }
   
   // if the photoInfo is already in the NSUserDefaults, delete it
+  NSString *photoInfoId = [photoInfo valueForKeyPath:FLICKR_PHOTO_ID];
   NSUInteger key = [photos indexOfObjectPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
-    return [[photoInfo valueForKeyPath:FLICKR_PHOTO_ID] isEqualToString:[obj valueForKeyPath:FLICKR_PHOTO_ID]];
+    return [photoInfoId isEqualToString:[obj valueForKeyPath:FLICKR_PHOTO_ID]];
   }];
   
   if (key != NSNotFound) {
