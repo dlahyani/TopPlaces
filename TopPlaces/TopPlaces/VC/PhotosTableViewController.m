@@ -14,7 +14,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) viewDidLoad {
   [super viewDidLoad];
   [self fetchPhotos];
-  
 }
 
 - (void) fetchPhotos {
@@ -47,8 +46,17 @@ NS_ASSUME_NONNULL_BEGIN
   NSString *photoTitle =  [self.photosInfo[indexPath.row] valueForKeyPath:FLICKR_PHOTO_TITLE];
   NSString *photoDetails =  [self.photosInfo[indexPath.row] valueForKeyPath:FLICKR_PHOTO_DESCRIPTION];
   
-  cell.textLabel.text = photoTitle;
-  cell.detailTextLabel.text = photoDetails;
+  if (photoTitle.length) {
+    cell.textLabel.text = photoTitle;
+    cell.detailTextLabel.text = photoDetails;
+  } else if (photoDetails.length) {
+    cell.textLabel.text = photoDetails;
+    cell.detailTextLabel.text = @"";
+  } else {
+    cell.textLabel.text = @"no-title";
+  }
+  
+  
   return cell;
 }
 
