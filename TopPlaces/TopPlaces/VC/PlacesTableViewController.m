@@ -142,7 +142,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 
-- (NSString * __nullable)tableView:( UITableView * )tableView titleForHeaderInSection:(NSInteger)section
+- (nullable NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
   return self.sortedContries[section];
 }
@@ -155,7 +155,8 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(nonnull NSIndexPath *)indexPath
+- (UITableViewCell *)tableView:(UITableView *)tableView
+         cellForRowAtIndexPath:(nonnull NSIndexPath *)indexPath
 {
   UITableViewCell *cell;
   cell = [self.tableView dequeueReusableCellWithIdentifier:@"FlickrPlacesCell"];
@@ -176,7 +177,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 #pragma mark - split view delegates
-- (BOOL) splitViewController:(UISplitViewController *)splitViewController collapseSecondaryViewController:(UIViewController *)secondaryViewController ontoPrimaryViewController:(UIViewController *)primaryViewController
+- (BOOL) splitViewController:(UISplitViewController *)splitViewController
+    collapseSecondaryViewController:(UIViewController *)secondaryViewController
+          ontoPrimaryViewController:(UIViewController *)primaryViewController
 {
   return YES; //show master view by default
 }

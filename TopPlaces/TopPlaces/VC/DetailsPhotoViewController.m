@@ -23,12 +23,15 @@ NS_ASSUME_NONNULL_BEGIN
   [super viewDidLoad];
   self.scrollView.delegate = self;
   
-  UITapGestureRecognizer *doubleTapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(scrollViewTwoFingerTapped:)];
+  UITapGestureRecognizer *doubleTapRecognizer =
+      [[UITapGestureRecognizer alloc] initWithTarget:self
+                                              action:@selector(scrollViewTwoFingerTapped:)];
+  
   doubleTapRecognizer.numberOfTapsRequired = 2;
   doubleTapRecognizer.numberOfTouchesRequired = 1;
   [self.scrollView addGestureRecognizer:doubleTapRecognizer];
-  
-  if (self.photoInfo && !self.imageView) { //if info supplied but image is not loaded yet
+  //in ipad info can be missing
+  if (self.photoInfo) {
     [self loadImage:self.photoInfo];
   }
   
@@ -42,18 +45,24 @@ NS_ASSUME_NONNULL_BEGIN
 //  }
 //}
 
-- (void)scrollViewTwoFingerTapped:(UITapGestureRecognizer*)recognizer
+- (void)scrollViewDoubleFingerTapped:(UITapGestureRecognizer*)recognizer
 {
   //if already zoomed out - zoom in a bit
   if (self.scrollView.zoomScale == self.scrollView.minimumZoomScale) {
-    [self.scrollView setZoomScale:self.scrollView.zoomScale*1.5 animated:YES];
+    [self.scrollView setZoomScale:self.scrollView.zoomScale*2 animated:YES];
   } else {
     //zoom out
     [self.scrollView setZoomScale:self.scrollView.minimumZoomScale animated:YES];
   }
 }
 
-
+- (void) viewDidAppear:(BOOL)animated
+{
+  [super viewDidAppear:animated];
+  
+  NSLog(@"DetailsPhotoViewController::viewDidAppear");
+  
+}
 - (void) viewDidLayoutSubviews
 {
   [super viewDidLayoutSubviews];
@@ -65,7 +74,7 @@ NS_ASSUME_NONNULL_BEGIN
   }
   NSLog(@"imageView.frame %@", NSStringFromCGRect(self.imageView.frame));
   NSLog(@"scrollView.frame %@", NSStringFromCGRect(self.scrollView.frame));
-    NSLog(@"---");
+  NSLog(@"---");
   
 }
 //
@@ -126,20 +135,23 @@ NS_ASSUME_NONNULL_BEGIN
       
       [weakSelf.scrollView addSubview:weakSelf.imageView];
       weakSelf.scrollView.contentSize = weakSelf.imageView.bounds.size;
-      weakSelf.scrollView.scrollIndicatorInsets   = UIEdgeInsetsMake(0, 0, 0, 0); //TODO: why do we need this, why scrollView origin is not 0
+      
+      //TODO: why do we need this, why scrollView origin is not 0
+      weakSelf.scrollView.scrollIndicatorInsets   = UIEdgeInsetsMake(0, 0, 0, 0);
       weakSelf.scrollView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);//TODO: why do we need this
-        });
+    });
   });
 }
 
 
 
+// UIScrollViewDelegate method
 - (UIView * __nullable)viewForZoomingInScrollView:(UIScrollView *)scrollView
 {
   return self.imageView;
 }
 
-
+// UIScrollViewDelegate method
 - (void)scrollViewDidZoom:(UIScrollView *)scrollView {
   // The scroll view has zoomed, so you need to re-center the contents
   [self centerScrollViewContents];
@@ -177,6 +189,7 @@ NS_ASSUME_NONNULL_BEGIN
   self.imageView.center = imageViewCenter;
   
 }
+
 
 - (void)aspectFitImage
 {
