@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
   
   UITapGestureRecognizer *doubleTapRecognizer =
       [[UITapGestureRecognizer alloc] initWithTarget:self
-                                              action:@selector(scrollViewTwoFingerTapped:)];
+                                              action:@selector(scrollViewDoubleFingerTapped:)];
   
   doubleTapRecognizer.numberOfTapsRequired = 2;
   doubleTapRecognizer.numberOfTouchesRequired = 1;
@@ -72,8 +72,8 @@ NS_ASSUME_NONNULL_BEGIN
   if (self.imageView) {
     [self aspectFitImage];
   }
-  NSLog(@"imageView.frame %@", NSStringFromCGRect(self.imageView.frame));
-  NSLog(@"scrollView.frame %@", NSStringFromCGRect(self.scrollView.frame));
+  NSLog(@"imageView.frame %@", StrCGRect(self.imageView.frame));
+  NSLog(@"scrollView.frame %@", StrCGRect(self.scrollView.frame));
   NSLog(@"---");
   
 }
@@ -143,6 +143,16 @@ NS_ASSUME_NONNULL_BEGIN
   });
 }
 
+ NSString *StrCGPoint(CGPoint p)
+{
+  return [NSString stringWithFormat:@"{%d, %d}", (int)p.x, (int)p.y];
+}
+
+
+NSString *StrCGRect(CGRect r)
+{
+  return [NSString stringWithFormat:@"o - {%d, %d}, s - {%d, %d}", (int)r.origin.x, (int)r.origin.y, (int)r.size.width, (int)r.size.height];
+}
 
 
 // UIScrollViewDelegate method
@@ -154,11 +164,11 @@ NS_ASSUME_NONNULL_BEGIN
 // UIScrollViewDelegate method
 - (void)scrollViewDidZoom:(UIScrollView *)scrollView {
   // The scroll view has zoomed, so you need to re-center the contents
-  [self centerScrollViewContents];
+  [self centerScrollViewContents:NO];
 }
 
 
-- (void)centerScrollViewContents
+- (void)centerScrollViewContents:(BOOL)forced
 {
   NSLog(@"====centerScrollViewContents====");
 
@@ -167,27 +177,31 @@ NS_ASSUME_NONNULL_BEGIN
   CGSize imageViewSize = CGRectStandardize(self.imageView.frame).size;
   
   CGSize scrollViewSize = CGRectStandardize(self.scrollView.bounds).size;
-  NSLog(@"imageView.frame %@", NSStringFromCGRect(self.imageView.frame));
-  NSLog(@"scrollView.frame %@", NSStringFromCGRect(self.scrollView.frame));
-  NSLog(@"imageView.size %@", NSStringFromCGSize(imageViewSize));
-  NSLog(@"scrollView.size %@", NSStringFromCGSize(scrollViewSize));
+  NSLog(@"imageViewCenter %@", StrCGPoint(imageViewCenter));
+  NSLog(@"scrollView.frame %@", StrCGRect(self.scrollView.frame));
+  NSLog(@"imageView.frame %@", StrCGRect(self.imageView.frame));
+
 
   //touch the center only if scrollView exceeds the image
   
-  if (imageViewSize.width <= scrollViewSize.width) {
+  if ((imageViewSize.width <= scrollViewSize.width) || forced) {
     imageViewCenter.x = scrollViewSize.width/2.0;
   }
   
-  if (imageViewSize.height <= scrollViewSize.height) {
+  if ((imageViewSize.height <= scrollViewSize.height) || forced) {
     imageViewCenter.y = scrollViewSize.height/2.0;
   }
   
   //try to remove all the padding
-  self.scrollView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
+//  self.scrollView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
 
   //this will put the image in the center and add the padding as needed
   self.imageView.center = imageViewCenter;
-  
+  NSLog(@"imageViewCenter NEW %@", StrCGPoint(imageViewCenter));
+  NSLog(@"   ");
+  NSLog(@"   ");
+  NSLog(@"   ");
+  NSLog(@"   ");
 }
 
 
@@ -208,7 +222,7 @@ NS_ASSUME_NONNULL_BEGIN
   //start zoomed out
   [self.scrollView setZoomScale:self.scrollView.minimumZoomScale animated:NO];
   
-  [self centerScrollViewContents ];
+  [self centerScrollViewContents:YES ];
 }
 @end
 
