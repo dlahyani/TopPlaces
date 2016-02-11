@@ -45,6 +45,7 @@
 		30765D501C6C6D0700A27C66 /* FlickrFetcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FlickrFetcher.m; path = Model/FlickrFetcher.m; sourceTree = "<group>"; };
 		30765D511C6C6D0700A27C66 /* PhotosHistory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PhotosHistory.h; path = Model/PhotosHistory.h; sourceTree = "<group>"; };
 		30765D521C6C6D0700A27C66 /* PhotosHistory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PhotosHistory.m; path = Model/PhotosHistory.m; sourceTree = "<group>"; };
+		30765D551C6C6F3500A27C66 /* PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,6 +95,7 @@
 				30730E7D1C57D4A6001B3668 /* AppDelegate.h */,
 				30730E7E1C57D4A6001B3668 /* AppDelegate.m */,
 				30730E7B1C57D4A6001B3668 /* main.m */,
+				30765D551C6C6F3500A27C66 /* PrefixHeader.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -319,6 +321,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/TopPlaces/PrefixHeader.pch";
 				INFOPLIST_FILE = TopPlaces/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -332,6 +336,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/TopPlaces/PrefixHeader.pch";
 				INFOPLIST_FILE = TopPlaces/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

@@ -1,6 +1,6 @@
 // Copyright (c) 2016 Lightricks. All rights reserved.
 // Created by Gennadi Iosad.
-@import Foundation;
+
 NS_ASSUME_NONNULL_BEGIN
 
 /// API for accessing persistent history storage.
