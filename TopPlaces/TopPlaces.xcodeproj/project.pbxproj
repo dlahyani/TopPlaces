@@ -7,23 +7,21 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		30210C8B1C61F07900B18099 /* PhotosHistory.m in Sources */ = {isa = PBXBuildFile; fileRef = 30210C8A1C61F07900B18099 /* PhotosHistory.m */; };
 		30730E7C1C57D4A6001B3668 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 30730E7B1C57D4A6001B3668 /* main.m */; };
 		30730E7F1C57D4A6001B3668 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 30730E7E1C57D4A6001B3668 /* AppDelegate.m */; };
 		30730E851C57D4A6001B3668 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 30730E831C57D4A6001B3668 /* Main.storyboard */; };
 		30730E871C57D4A6001B3668 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 30730E861C57D4A6001B3668 /* Assets.xcassets */; };
 		30730E8A1C57D4A6001B3668 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 30730E881C57D4A6001B3668 /* LaunchScreen.storyboard */; };
-		308690BB1C5F5290004E930B /* DetailsPhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 308690B21C5F5290004E930B /* DetailsPhotoViewController.m */; };
-		308690BC1C5F5290004E930B /* PhotosTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 308690B41C5F5290004E930B /* PhotosTableViewController.m */; };
-		308690BD1C5F5290004E930B /* PlacesTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 308690B61C5F5290004E930B /* PlacesTableViewController.m */; };
-		308690BE1C5F5290004E930B /* RecentPhotosTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 308690B81C5F5290004E930B /* RecentPhotosTableViewController.m */; };
-		308690BF1C5F5290004E930B /* TopPhotosTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 308690BA1C5F5290004E930B /* TopPhotosTableViewController.m */; };
-		30DA5FE51C5DFB91007F7A62 /* FlickrFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 30DA5FE41C5DFB91007F7A62 /* FlickrFetcher.m */; };
+		30765D491C6C6CFE00A27C66 /* DetailsPhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 30765D401C6C6CFE00A27C66 /* DetailsPhotoViewController.m */; };
+		30765D4A1C6C6CFE00A27C66 /* PhotosTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 30765D421C6C6CFE00A27C66 /* PhotosTableViewController.m */; };
+		30765D4B1C6C6CFE00A27C66 /* PlacesTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 30765D441C6C6CFE00A27C66 /* PlacesTableViewController.m */; };
+		30765D4C1C6C6CFE00A27C66 /* RecentPhotosTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 30765D461C6C6CFE00A27C66 /* RecentPhotosTableViewController.m */; };
+		30765D4D1C6C6CFE00A27C66 /* TopPhotosTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 30765D481C6C6CFE00A27C66 /* TopPhotosTableViewController.m */; };
+		30765D531C6C6D0700A27C66 /* FlickrFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 30765D501C6C6D0700A27C66 /* FlickrFetcher.m */; };
+		30765D541C6C6D0700A27C66 /* PhotosHistory.m in Sources */ = {isa = PBXBuildFile; fileRef = 30765D521C6C6D0700A27C66 /* PhotosHistory.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		30210C891C61F07900B18099 /* PhotosHistory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotosHistory.h; sourceTree = "<group>"; };
-		30210C8A1C61F07900B18099 /* PhotosHistory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotosHistory.m; sourceTree = "<group>"; };
 		30730E771C57D4A6001B3668 /* TopPlaces.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TopPlaces.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		30730E7B1C57D4A6001B3668 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		30730E7D1C57D4A6001B3668 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -32,19 +30,21 @@
 		30730E861C57D4A6001B3668 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		30730E891C57D4A6001B3668 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		30730E8B1C57D4A6001B3668 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		308690B11C5F5290004E930B /* DetailsPhotoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DetailsPhotoViewController.h; path = VC/DetailsPhotoViewController.h; sourceTree = "<group>"; };
-		308690B21C5F5290004E930B /* DetailsPhotoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DetailsPhotoViewController.m; path = VC/DetailsPhotoViewController.m; sourceTree = "<group>"; };
-		308690B31C5F5290004E930B /* PhotosTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PhotosTableViewController.h; path = VC/PhotosTableViewController.h; sourceTree = "<group>"; };
-		308690B41C5F5290004E930B /* PhotosTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PhotosTableViewController.m; path = VC/PhotosTableViewController.m; sourceTree = "<group>"; };
-		308690B51C5F5290004E930B /* PlacesTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlacesTableViewController.h; path = VC/PlacesTableViewController.h; sourceTree = "<group>"; };
-		308690B61C5F5290004E930B /* PlacesTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PlacesTableViewController.m; path = VC/PlacesTableViewController.m; sourceTree = "<group>"; };
-		308690B71C5F5290004E930B /* RecentPhotosTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RecentPhotosTableViewController.h; path = VC/RecentPhotosTableViewController.h; sourceTree = "<group>"; };
-		308690B81C5F5290004E930B /* RecentPhotosTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RecentPhotosTableViewController.m; path = VC/RecentPhotosTableViewController.m; sourceTree = "<group>"; };
-		308690B91C5F5290004E930B /* TopPhotosTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TopPhotosTableViewController.h; path = VC/TopPhotosTableViewController.h; sourceTree = "<group>"; };
-		308690BA1C5F5290004E930B /* TopPhotosTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TopPhotosTableViewController.m; path = VC/TopPhotosTableViewController.m; sourceTree = "<group>"; };
-		30DA5FE21C5DFB91007F7A62 /* FlickrAPIKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FlickrAPIKey.h; path = Logic/FlickrAPIKey.h; sourceTree = "<group>"; };
-		30DA5FE31C5DFB91007F7A62 /* FlickrFetcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FlickrFetcher.h; path = Logic/FlickrFetcher.h; sourceTree = "<group>"; };
-		30DA5FE41C5DFB91007F7A62 /* FlickrFetcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FlickrFetcher.m; path = Logic/FlickrFetcher.m; sourceTree = "<group>"; };
+		30765D3F1C6C6CFE00A27C66 /* DetailsPhotoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DetailsPhotoViewController.h; path = Controllers/DetailsPhotoViewController.h; sourceTree = "<group>"; };
+		30765D401C6C6CFE00A27C66 /* DetailsPhotoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DetailsPhotoViewController.m; path = Controllers/DetailsPhotoViewController.m; sourceTree = "<group>"; };
+		30765D411C6C6CFE00A27C66 /* PhotosTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PhotosTableViewController.h; path = Controllers/PhotosTableViewController.h; sourceTree = "<group>"; };
+		30765D421C6C6CFE00A27C66 /* PhotosTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PhotosTableViewController.m; path = Controllers/PhotosTableViewController.m; sourceTree = "<group>"; };
+		30765D431C6C6CFE00A27C66 /* PlacesTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlacesTableViewController.h; path = Controllers/PlacesTableViewController.h; sourceTree = "<group>"; };
+		30765D441C6C6CFE00A27C66 /* PlacesTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PlacesTableViewController.m; path = Controllers/PlacesTableViewController.m; sourceTree = "<group>"; };
+		30765D451C6C6CFE00A27C66 /* RecentPhotosTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RecentPhotosTableViewController.h; path = Controllers/RecentPhotosTableViewController.h; sourceTree = "<group>"; };
+		30765D461C6C6CFE00A27C66 /* RecentPhotosTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RecentPhotosTableViewController.m; path = Controllers/RecentPhotosTableViewController.m; sourceTree = "<group>"; };
+		30765D471C6C6CFE00A27C66 /* TopPhotosTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TopPhotosTableViewController.h; path = Controllers/TopPhotosTableViewController.h; sourceTree = "<group>"; };
+		30765D481C6C6CFE00A27C66 /* TopPhotosTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TopPhotosTableViewController.m; path = Controllers/TopPhotosTableViewController.m; sourceTree = "<group>"; };
+		30765D4E1C6C6D0700A27C66 /* FlickrAPIKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FlickrAPIKey.h; path = Model/FlickrAPIKey.h; sourceTree = "<group>"; };
+		30765D4F1C6C6D0700A27C66 /* FlickrFetcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FlickrFetcher.h; path = Model/FlickrFetcher.h; sourceTree = "<group>"; };
+		30765D501C6C6D0700A27C66 /* FlickrFetcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FlickrFetcher.m; path = Model/FlickrFetcher.m; sourceTree = "<group>"; };
+		30765D511C6C6D0700A27C66 /* PhotosHistory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PhotosHistory.h; path = Model/PhotosHistory.h; sourceTree = "<group>"; };
+		30765D521C6C6D0700A27C66 /* PhotosHistory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PhotosHistory.m; path = Model/PhotosHistory.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,8 +77,8 @@
 		30730E791C57D4A6001B3668 /* TopPlaces */ = {
 			isa = PBXGroup;
 			children = (
-				30DA5FEB1C5E0012007F7A62 /* VC */,
-				30DA5FE61C5DFBA3007F7A62 /* Logic */,
+				30DA5FEB1C5E0012007F7A62 /* Controllers */,
+				30DA5FE61C5DFBA3007F7A62 /* Model */,
 				30730E831C57D4A6001B3668 /* Main.storyboard */,
 				30730E861C57D4A6001B3668 /* Assets.xcassets */,
 				30730E7A1C57D4A6001B3668 /* Supporting Files */,
@@ -98,33 +98,33 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		30DA5FE61C5DFBA3007F7A62 /* Logic */ = {
+		30DA5FE61C5DFBA3007F7A62 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				30DA5FE21C5DFB91007F7A62 /* FlickrAPIKey.h */,
-				30DA5FE31C5DFB91007F7A62 /* FlickrFetcher.h */,
-				30DA5FE41C5DFB91007F7A62 /* FlickrFetcher.m */,
-				30210C891C61F07900B18099 /* PhotosHistory.h */,
-				30210C8A1C61F07900B18099 /* PhotosHistory.m */,
+				30765D4E1C6C6D0700A27C66 /* FlickrAPIKey.h */,
+				30765D4F1C6C6D0700A27C66 /* FlickrFetcher.h */,
+				30765D501C6C6D0700A27C66 /* FlickrFetcher.m */,
+				30765D511C6C6D0700A27C66 /* PhotosHistory.h */,
+				30765D521C6C6D0700A27C66 /* PhotosHistory.m */,
 			);
-			name = Logic;
+			name = Model;
 			sourceTree = "<group>";
 		};
-		30DA5FEB1C5E0012007F7A62 /* VC */ = {
+		30DA5FEB1C5E0012007F7A62 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				308690B51C5F5290004E930B /* PlacesTableViewController.h */,
-				308690B61C5F5290004E930B /* PlacesTableViewController.m */,
-				308690B11C5F5290004E930B /* DetailsPhotoViewController.h */,
-				308690B21C5F5290004E930B /* DetailsPhotoViewController.m */,
-				308690B31C5F5290004E930B /* PhotosTableViewController.h */,
-				308690B41C5F5290004E930B /* PhotosTableViewController.m */,
-				308690B71C5F5290004E930B /* RecentPhotosTableViewController.h */,
-				308690B81C5F5290004E930B /* RecentPhotosTableViewController.m */,
-				308690B91C5F5290004E930B /* TopPhotosTableViewController.h */,
-				308690BA1C5F5290004E930B /* TopPhotosTableViewController.m */,
+				30765D3F1C6C6CFE00A27C66 /* DetailsPhotoViewController.h */,
+				30765D401C6C6CFE00A27C66 /* DetailsPhotoViewController.m */,
+				30765D411C6C6CFE00A27C66 /* PhotosTableViewController.h */,
+				30765D421C6C6CFE00A27C66 /* PhotosTableViewController.m */,
+				30765D431C6C6CFE00A27C66 /* PlacesTableViewController.h */,
+				30765D441C6C6CFE00A27C66 /* PlacesTableViewController.m */,
+				30765D451C6C6CFE00A27C66 /* RecentPhotosTableViewController.h */,
+				30765D461C6C6CFE00A27C66 /* RecentPhotosTableViewController.m */,
+				30765D471C6C6CFE00A27C66 /* TopPhotosTableViewController.h */,
+				30765D481C6C6CFE00A27C66 /* TopPhotosTableViewController.m */,
 			);
-			name = VC;
+			name = Controllers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -198,14 +198,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				308690BF1C5F5290004E930B /* TopPhotosTableViewController.m in Sources */,
-				308690BC1C5F5290004E930B /* PhotosTableViewController.m in Sources */,
-				30210C8B1C61F07900B18099 /* PhotosHistory.m in Sources */,
-				308690BD1C5F5290004E930B /* PlacesTableViewController.m in Sources */,
+				30765D491C6C6CFE00A27C66 /* DetailsPhotoViewController.m in Sources */,
+				30765D4B1C6C6CFE00A27C66 /* PlacesTableViewController.m in Sources */,
+				30765D541C6C6D0700A27C66 /* PhotosHistory.m in Sources */,
 				30730E7F1C57D4A6001B3668 /* AppDelegate.m in Sources */,
-				308690BE1C5F5290004E930B /* RecentPhotosTableViewController.m in Sources */,
-				30DA5FE51C5DFB91007F7A62 /* FlickrFetcher.m in Sources */,
-				308690BB1C5F5290004E930B /* DetailsPhotoViewController.m in Sources */,
+				30765D4C1C6C6CFE00A27C66 /* RecentPhotosTableViewController.m in Sources */,
+				30765D4A1C6C6CFE00A27C66 /* PhotosTableViewController.m in Sources */,
+				30765D4D1C6C6CFE00A27C66 /* TopPhotosTableViewController.m in Sources */,
+				30765D531C6C6D0700A27C66 /* FlickrFetcher.m in Sources */,
 				30730E7C1C57D4A6001B3668 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
