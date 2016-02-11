@@ -1,7 +1,6 @@
 // Copyright (c) 2016 Lightricks. All rights reserved.
 // Created by Gennadi Iosad.
 
-#import "UIKit/UIKit.h"
 NS_ASSUME_NONNULL_BEGIN
 /// Abstract VC class for presenting a list of photos
 @interface PhotosTableViewController : UITableViewController

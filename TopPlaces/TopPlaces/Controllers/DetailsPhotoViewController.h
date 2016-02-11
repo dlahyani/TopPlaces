@@ -1,6 +1,5 @@
 // Copyright (c) 2016 Lightricks. All rights reserved.
 // Created by Gennadi Iosad.
-#import "UIKit/UIKit.h"
 NS_ASSUME_NONNULL_BEGIN
 /// VC for presenting a photo given the photo data in Flickr format.
 @interface DetailsPhotoViewController : UIViewController
