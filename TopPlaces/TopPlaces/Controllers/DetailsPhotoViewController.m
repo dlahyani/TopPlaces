@@ -107,9 +107,6 @@ NS_ASSUME_NONNULL_BEGIN
       
       [weakSelf.scrollView addSubview:weakSelf.imageView];
       weakSelf.scrollView.contentSize = weakSelf.imageView.bounds.size;
-      
-      //TODO fix: why do we need this
-//      weakSelf.scrollView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
     });
   });
 }
@@ -119,17 +116,18 @@ NS_ASSUME_NONNULL_BEGIN
   CGPoint imageViewCenter = self.imageView.center;
   //we image size after scroll's view transform - thus we take the frame
   CGSize imageViewSize = CGRectStandardize(self.imageView.frame).size;
-  
   CGSize scrollViewSize = CGRectStandardize(self.scrollView.bounds).size;
-
+  
+  CGPoint scrollViewCenter = [self scrollViewCenter];
+  
   //touch the center only if scrollView exceeds the image
   
   if (imageViewSize.width <= scrollViewSize.width) {
-    imageViewCenter.x = scrollViewSize.width/2.0;
+    imageViewCenter.x = scrollViewCenter.x;
   }
   
   if (imageViewSize.height <= scrollViewSize.height) {
-    imageViewCenter.y = scrollViewSize.height/2.0;
+    imageViewCenter.y = scrollViewCenter.y;
   }
   
   //this will put the image in the center and add the padding as needed
@@ -151,8 +149,22 @@ NS_ASSUME_NONNULL_BEGIN
   
   //start zoomed out and centered
   [self.scrollView setZoomScale:self.scrollView.minimumZoomScale animated:NO];
-  self.imageView.center = CGPointMake(scrollViewSize.width/2.0, scrollViewSize.height/2.0);
+  
+
+  self.imageView.center = [self scrollViewCenter];
 }
+
+
+//return the scroll view center
+- (CGPoint) scrollViewCenter {
+  CGSize scrollViewSize = CGRectStandardize(self.scrollView.bounds).size;
+  UIEdgeInsets contentInset = self.scrollView.contentInset;
+  CGFloat centerX = (scrollViewSize.width - contentInset.left - contentInset.right)/2.0;
+  CGFloat centerY = (scrollViewSize.height - contentInset.top - contentInset.bottom)/2.0;
+  
+  return CGPointMake(centerX, centerY);
+}
+
 
 #pragma mark - for debug
 NSString *StrCGPoint(CGPoint p) {
