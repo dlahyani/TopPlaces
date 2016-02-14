@@ -12,6 +12,9 @@ NS_ASSUME_NONNULL_BEGIN
 {
   NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
   NSArray *photos = [prefs objectForKey:PHOTOS_HISTORY_PREF_KEY];
+  if (!photos) {
+    photos = [[NSArray alloc] init];
+  }
   return photos;
 }
 

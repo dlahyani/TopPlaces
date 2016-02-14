@@ -39,13 +39,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void) fetchPlaces {
   [self.refreshControl beginRefreshing];
-  NSURL *url = [FlickrFetcher URLforTopPlaces];
   
   //in background:
   dispatch_queue_t fetchPhoto = dispatch_queue_create("flickr fetcher", NULL);
   dispatch_async(fetchPhoto, ^(void){
     
     //download and convert places to array
+    NSURL *url = [FlickrFetcher URLforTopPlaces];
     NSData *jsonResults = [NSData dataWithContentsOfURL:url];
     NSDictionary *propertyListResults = [NSJSONSerialization JSONObjectWithData:jsonResults
                                                                         options:0

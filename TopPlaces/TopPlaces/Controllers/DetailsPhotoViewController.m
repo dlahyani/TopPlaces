@@ -2,7 +2,6 @@
 // Created by Gennadi Iosad.
 
 #import "DetailsPhotoViewController.h"
-#import "FlickrFetcher.h"
 #import "PhotosHistory.h"
 NS_ASSUME_NONNULL_BEGIN
 
@@ -29,10 +28,8 @@ NS_ASSUME_NONNULL_BEGIN
   doubleTapRecognizer.numberOfTapsRequired = 2;
   doubleTapRecognizer.numberOfTouchesRequired = 1;
   [self.scrollView addGestureRecognizer:doubleTapRecognizer];
-  //in ipad info can be missing
-  if (self.photoInfo) {
-    [self loadImage:self.photoInfo];
-  }
+
+  [self loadImage];
   
   NSLog(@"DetailsPhotoViewController::viewDidLoad self %p", self);
 }
@@ -76,18 +73,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 #pragma mark - aux logic
-- (void)loadImage:(NSDictionary *)photoInfo {
-  [PhotosHistory addPhotoInfo:photoInfo];
-  
-  NSURL *photoUrl = [FlickrFetcher URLforPhoto:self.photoInfo format:FlickrPhotoFormatOriginal];
-
-  if (!photoUrl) {
-    photoUrl = [FlickrFetcher URLforPhoto:self.photoInfo format:FlickrPhotoFormatLarge];
-  }
-  
-  if (!photoUrl) {
+- (void)loadImage {
+  //in ipad info can be missing
+  if (!self.photoInfo) {
     return;
   }
+  
+ //TODO:fix [PhotosHistory addPhotoInfo:self.photoInfo];
   
   self.noImageLoadedView.hidden = YES;
   [self.spinner startAnimating];
@@ -96,9 +88,7 @@ NS_ASSUME_NONNULL_BEGIN
   dispatch_queue_t fetchPhoto = dispatch_queue_create("picture of photo", NULL);
   dispatch_async(fetchPhoto, ^(void){
     //get the image
-    NSData *imageData = [NSData dataWithContentsOfURL:photoUrl];
-    UIImage *img = [UIImage imageWithData:imageData];
-    NSLog(@"img downloaded %p", img);
+    UIImage *img = [self.placesPhotosProvider downloadPhoto:self.photoInfo];
     
     //show it (on UI thread)
     dispatch_async(dispatch_get_main_queue(), ^(void){
@@ -110,19 +100,15 @@ NS_ASSUME_NONNULL_BEGIN
         return;
       }
 
-      weakSelf.title = [weakSelf.photoInfo valueForKeyPath:FLICKR_PHOTO_TITLE];
+      weakSelf.title = weakSelf.photoInfo.title;
       
-      //if no title go with description
-      if ([weakSelf.title length] == 0) {
-        weakSelf.title = [weakSelf.photoInfo valueForKeyPath:FLICKR_PHOTO_DESCRIPTION];
-      }
       weakSelf.imageView = [[UIImageView alloc] initWithImage:img];
       weakSelf.imageView.frame = CGRectMake(0, 0, img.size.width, img.size.height);
       
       [weakSelf.scrollView addSubview:weakSelf.imageView];
       weakSelf.scrollView.contentSize = weakSelf.imageView.bounds.size;
       
-      //TODO: why do we need this, why scrollView origin is not 0
+      //TODO fix: why do we need this, why scrollView origin is not 0
       weakSelf.scrollView.scrollIndicatorInsets   = UIEdgeInsetsMake(0, 0, 0, 0);
       weakSelf.scrollView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
     });

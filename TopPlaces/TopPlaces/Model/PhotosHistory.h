@@ -9,7 +9,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// Add the \c photoInfo to the persistent history log as a first item
 /// It will automatically truncate the storage size to some length, pruning the oldest items
-+ (void) addPhotoInfo:(NSDictionary*)photoInfo;
++ (void) addPhotoInfo:(NSDictionary *)photoInfo;
 
 /// Returns the items that were added history recently
 + (NSArray*) historyArray;

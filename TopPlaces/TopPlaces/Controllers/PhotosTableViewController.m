@@ -3,7 +3,7 @@
 
 #import "PhotosTableViewController.h"
 #import "DetailsPhotoViewController.h"
-#import "FlickrFetcher.h"
+#import "PlacesPhotosProvider.h"
 NS_ASSUME_NONNULL_BEGIN
 @interface PhotosTableViewController()
 
@@ -43,18 +43,12 @@ NS_ASSUME_NONNULL_BEGIN
          cellForRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
   UITableViewCell *cell;
   cell = [self.tableView dequeueReusableCellWithIdentifier:@"FlickrPhotoCell"];
-  NSString *photoTitle =  [self.photosInfo[indexPath.row] valueForKeyPath:FLICKR_PHOTO_TITLE];
-  NSString *photoDetails =  [self.photosInfo[indexPath.row] valueForKeyPath:FLICKR_PHOTO_DESCRIPTION];
+  NSString *photoTitle =  self.photosInfo[indexPath.row].title;
+  NSString *photoDetails = self.photosInfo[indexPath.row].details;
   
-  if (photoTitle.length) {
-    cell.textLabel.text = photoTitle;
-    cell.detailTextLabel.text = photoDetails;
-  } else if (photoDetails.length) {
-    cell.textLabel.text = photoDetails;
-    cell.detailTextLabel.text = @"";
-  } else {
-    cell.textLabel.text = @"no-title";
-  }
+
+  cell.textLabel.text = photoTitle;
+  cell.detailTextLabel.text = photoDetails;
   
   
   return cell;
