@@ -14,6 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) NSString *country;
 
 - (NSURL*) getURLOfPhotoInfoArrayWithMaxLength:(NSUInteger)maxLength;
+
+- (NSComparisonResult) compare:(id<PlaceInfo>)other;
 @end
 
 NS_ASSUME_NONNULL_END

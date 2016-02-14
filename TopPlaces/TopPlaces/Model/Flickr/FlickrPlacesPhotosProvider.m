@@ -19,8 +19,13 @@ NS_ASSUME_NONNULL_BEGIN
                                                                       options:0
                                                                         error:NULL];
   
-  NSArray *places = [propertyListResults valueForKeyPath:FLICKR_RESULTS_PLACES];
-  return places;
+  NSArray *placesData = [propertyListResults valueForKeyPath:FLICKR_RESULTS_PLACES];
+  
+  NSMutableArray *placesInfo = [[NSMutableArray alloc] initWithCapacity:[placesData count]];
+  for (NSDictionary *d in placesData) {
+    [placesInfo addObject:[[FlickrPlaceInfo alloc] initWithDictionary:d]];
+  }
+  return placesInfo;
 }
 
 
@@ -34,10 +39,11 @@ NS_ASSUME_NONNULL_BEGIN
                                                                       options:0
                                                                         error:NULL];
   NSArray *photosData = [propertyListResults valueForKeyPath:FLICKR_RESULTS_PHOTOS];
-  NSMutableArray *photosInfo = [[NSMutableArray alloc] initWithCapacity:[photosData count]];
+  NSMutableArray<FlickrPhotoInfo*> *photosInfo = [[NSMutableArray alloc] initWithCapacity:[photosData count]];
   for (NSDictionary *d in photosData) {
     [photosInfo addObject:[[FlickrPhotoInfo alloc] initWithDictionary:d]];
   }
+  
   return photosInfo;
 }
 

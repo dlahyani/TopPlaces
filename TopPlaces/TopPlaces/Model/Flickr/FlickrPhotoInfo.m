@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 
-- (NSString *)getTitle {
+- (NSString *)title {
   NSString *photoTitle =  [self.photoData valueForKeyPath:FLICKR_PHOTO_TITLE];
   if (![photoTitle length]) {
     photoTitle =  [self.photoData valueForKeyPath:FLICKR_PHOTO_DESCRIPTION];
@@ -29,7 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
   }
   return photoTitle;
 }
-- (NSString *)getDetails {
+- (NSString *)details {
   NSString *photoDetails =  [self.photoData valueForKeyPath:FLICKR_PHOTO_DESCRIPTION];
   NSString *photoTitle =  [self.photoData valueForKeyPath:FLICKR_PHOTO_TITLE];
   if (![photoTitle length]) {
@@ -43,7 +43,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 
-- (NSURL *) getUrl {
+- (NSURL *) url {
   NSURL *photoUrl = [FlickrFetcher URLforPhoto:self.photoData format:FlickrPhotoFormatOriginal];
   
   if (!photoUrl) {
