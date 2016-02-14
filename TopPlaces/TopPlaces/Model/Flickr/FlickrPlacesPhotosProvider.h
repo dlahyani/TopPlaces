@@ -9,6 +9,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSArray<id<PlaceInfo>> *)downloadPlaces;
 - (NSArray<id<PhotoInfo>> *)downloadPhotosInfoForPlace:(id<PlaceInfo>)placeInfo
                                         withMaxResults:(NSUInteger)maxResults;
+
+
 @end
 
 NS_ASSUME_NONNULL_END

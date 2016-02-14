@@ -54,7 +54,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 - (UIImage *)downloadPhoto:(id<PhotoInfo>)photoInfo {
-  //TODO: fix history [PhotosHistory addPhotoInfo:photoInfo];
+  
+  [PhotosHistory addPhotoInfo:photoInfo];
+  
   NSURL *photoUrl = photoInfo.url;
   
   if (!photoUrl) {

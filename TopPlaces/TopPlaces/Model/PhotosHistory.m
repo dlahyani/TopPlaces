@@ -8,10 +8,10 @@ NS_ASSUME_NONNULL_BEGIN
 #define HISTORY_LOG_LENGTH 20
 @implementation PhotosHistory
 
-+ (NSArray *) historyArray
-{
++ (NSArray *) historyArray {
   NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-  NSArray *photos = [prefs objectForKey:PHOTOS_HISTORY_PREF_KEY];
+  NSData *encodedPhotos = [prefs objectForKey:PHOTOS_HISTORY_PREF_KEY];
+  NSArray *photos = [NSKeyedUnarchiver unarchiveObjectWithData:encodedPhotos];
   if (!photos) {
     photos = [[NSArray alloc] init];
   }
@@ -19,24 +19,19 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 
-+ (void) addPhotoInfo:(NSDictionary *)photoInfo
-{
-  NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-  
-  NSMutableArray *photos = [[prefs objectForKey:PHOTOS_HISTORY_PREF_KEY] mutableCopy];
-  if (!photos) {
-    photos = [[NSMutableArray alloc] init];
-  }
-  
++ (void) addPhotoInfo:(id<PhotoInfo>)photoInfo {
+
+  	NSMutableArray *photos = [[PhotosHistory historyArray] mutableCopy];
   // if the photoInfo is already in the NSUserDefaults, delete it
-  NSString *photoInfoId = [photoInfo valueForKeyPath:FLICKR_PHOTO_ID];
-  NSUInteger key = [photos indexOfObjectPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
-    return [photoInfoId isEqualToString:[obj valueForKeyPath:FLICKR_PHOTO_ID]];
-  }];
-  
-  if (key != NSNotFound) {
-    [photos removeObjectAtIndex:key];
-  }
+//todo:fix
+  //  NSString *photoInfoId = [photoInfo valueForKeyPath:FLICKR_PHOTO_ID];
+//  NSUInteger key = [photos indexOfObjectPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
+//    return [photoInfoId isEqualToString:[obj valueForKeyPath:FLICKR_PHOTO_ID]];
+//  }];
+//  
+//  if (key != NSNotFound) {
+//    [photos removeObjectAtIndex:key];
+//  }
   
   [photos insertObject:photoInfo atIndex:0];
   
@@ -46,7 +41,9 @@ NS_ASSUME_NONNULL_BEGIN
   }
   
   // add the photo to the NSUserDefault
-  [prefs setObject:photos forKey:PHOTOS_HISTORY_PREF_KEY];
+  NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+  NSData *encodedPhotos = [NSKeyedArchiver archivedDataWithRootObject:photos];
+  [prefs setObject:encodedPhotos forKey:PHOTOS_HISTORY_PREF_KEY];
   [prefs synchronize];
 }
 

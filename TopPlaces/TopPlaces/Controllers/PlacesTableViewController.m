@@ -3,6 +3,9 @@
 
 #import "PlacesTableViewController.h"
 #import "TopPhotosTableViewController.h"
+
+#import "AppDelegate.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface PlacesTableViewController() <UISplitViewControllerDelegate>
@@ -17,9 +20,12 @@ NS_ASSUME_NONNULL_BEGIN
   [self.refreshControl addTarget:self
                           action:@selector(handleRefresh:)
                 forControlEvents:UIControlEventValueChanged];
+
   
-  self.placesPhotosProvider = [[FlickrPlacesPhotosProvider alloc] init];
-  [self fetchPlaces];
+  AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+  self.placesPhotosProvider = appDelegate.placesPhotosProvider;
+  
+  [self fetchPlaces]; //TODO: move this out to willappaer with once time flag for somethign
 }
 
 
@@ -28,6 +34,8 @@ NS_ASSUME_NONNULL_BEGIN
   //this has to be done as early as possible
   self.splitViewController.delegate = self;
   self.splitViewController.preferredDisplayMode = UISplitViewControllerDisplayModeAllVisible;
+
+
 }
 
 

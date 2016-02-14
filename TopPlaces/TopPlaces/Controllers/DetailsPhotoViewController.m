@@ -78,7 +78,7 @@ NS_ASSUME_NONNULL_BEGIN
   if (!self.photoInfo) {
     return;
   }
-  
+
  //TODO:fix [PhotosHistory addPhotoInfo:self.photoInfo];
   
   self.noImageLoadedView.hidden = YES;
@@ -88,7 +88,7 @@ NS_ASSUME_NONNULL_BEGIN
   dispatch_queue_t fetchPhoto = dispatch_queue_create("picture of photo", NULL);
   dispatch_async(fetchPhoto, ^(void){
     //get the image
-    UIImage *img = [self.placesPhotosProvider downloadPhoto:self.photoInfo];
+    UIImage *img = [weakSelf.placesPhotosProvider downloadPhoto:weakSelf.photoInfo];
     
     //show it (on UI thread)
     dispatch_async(dispatch_get_main_queue(), ^(void){

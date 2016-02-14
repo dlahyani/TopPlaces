@@ -2,7 +2,11 @@
 // Created by Gennadi Iosad.
 
 #import "RecentPhotosTableViewController.h"
+
 #import "PhotosHistory.h"
+#import "PlacesPhotosProvider.h"
+#import "AppDelegate.h"
+
 NS_ASSUME_NONNULL_BEGIN
 @interface RecentPhotosTableViewController()  <UISplitViewControllerDelegate>
 
@@ -15,13 +19,18 @@ NS_ASSUME_NONNULL_BEGIN
   // do this early so the splitViewController will talk to the delegate
   self.splitViewController.delegate = self;
   self.splitViewController.preferredDisplayMode = UISplitViewControllerDisplayModeAllVisible;
-
-
 }
+
 
 
 - (void) viewWillAppear:(BOOL)animated {
   [super viewWillAppear:animated];
+  
+  //TODO: find a proper place for this
+  AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+  self.placesPhotosProvider = appDelegate.placesPhotosProvider;
+  
+  
   //history updates frequently so we want to udpate every time we show images
   [self fetchPhotos];
 }

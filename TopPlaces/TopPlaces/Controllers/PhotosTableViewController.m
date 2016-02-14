@@ -13,7 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - UIView overrides
 - (void) viewDidLoad {
   [super viewDidLoad];
-  [self fetchPhotos];
+  
+  [self fetchPhotos]; //TODO: need to move this as it being called for all tabs even if not shown
 }
 
 - (void) fetchPhotos {
@@ -44,8 +45,9 @@ NS_ASSUME_NONNULL_BEGIN
          cellForRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
   UITableViewCell *cell;
   cell = [self.tableView dequeueReusableCellWithIdentifier:@"FlickrPhotoCell"];
-  NSString *photoTitle =  self.photosInfo[indexPath.row].title;
-  NSString *photoDetails = self.photosInfo[indexPath.row].details;
+  id<PhotoInfo> photoInfo = self.photosInfo[indexPath.row];
+  NSString *photoTitle =  photoInfo.title;
+  NSString *photoDetails = photoInfo.details;
   
 
   cell.textLabel.text = photoTitle;

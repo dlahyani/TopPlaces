@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@protocol PhotoInfo
+@protocol PhotoInfo<NSCoding>
 
 @property (nonatomic, readonly) NSString *title;
 @property (nonatomic, readonly) NSString *details;
