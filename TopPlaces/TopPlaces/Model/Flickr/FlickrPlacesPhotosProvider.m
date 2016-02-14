@@ -39,11 +39,16 @@ NS_ASSUME_NONNULL_BEGIN
                                                                       options:0
                                                                         error:NULL];
   NSArray *photosData = [propertyListResults valueForKeyPath:FLICKR_RESULTS_PHOTOS];
+
+  
+  return [self convertPhotosDataToInfoArray:photosData];
+}
+
+- (NSArray<id<PhotoInfo>> *) convertPhotosDataToInfoArray:(NSArray *)photosData {
   NSMutableArray<FlickrPhotoInfo*> *photosInfo = [[NSMutableArray alloc] initWithCapacity:[photosData count]];
   for (NSDictionary *d in photosData) {
     [photosInfo addObject:[[FlickrPhotoInfo alloc] initWithDictionary:d]];
   }
-  
   return photosInfo;
 }
 
@@ -61,6 +66,7 @@ NS_ASSUME_NONNULL_BEGIN
   NSLog(@"img downloaded %p", img);
   return img;
 }
+
 @end
 
 

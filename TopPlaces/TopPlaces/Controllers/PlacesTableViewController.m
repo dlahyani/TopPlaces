@@ -3,7 +3,6 @@
 
 #import "PlacesTableViewController.h"
 #import "TopPhotosTableViewController.h"
-#import "FlickrFetcher.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @interface PlacesTableViewController() <UISplitViewControllerDelegate>
@@ -19,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
                           action:@selector(handleRefresh:)
                 forControlEvents:UIControlEventValueChanged];
   
+  self.placesPhotosProvider = [[FlickrPlacesPhotosProvider alloc] init];
   [self fetchPlaces];
 }
 
@@ -41,17 +41,11 @@ NS_ASSUME_NONNULL_BEGIN
   [self.refreshControl beginRefreshing];
   
   //in background:
+  __weak PlacesTableViewController *weakSelf = self;
   dispatch_queue_t fetchPhoto = dispatch_queue_create("flickr fetcher", NULL);
   dispatch_async(fetchPhoto, ^(void){
     
-    //download and convert places to array
-    NSURL *url = [FlickrFetcher URLforTopPlaces];
-    NSData *jsonResults = [NSData dataWithContentsOfURL:url];
-    NSDictionary *propertyListResults = [NSJSONSerialization JSONObjectWithData:jsonResults
-                                                                        options:0
-                                                                          error:NULL];
-    
-    NSArray *places = [propertyListResults valueForKeyPath:FLICKR_RESULTS_PLACES];
+    NSArray<id<PlaceInfo>> *places = [weakSelf.placesPhotosProvider downloadPlaces];
     
     // convert the flat list to country->places map
     NSDictionary *placesMap = [PlacesTableViewController contriesMappingForPlacesArray:places];
@@ -59,39 +53,34 @@ NS_ASSUME_NONNULL_BEGIN
     //sort the countries list
     NSArray *sortedCountries = [placesMap.allKeys sortedArrayUsingComparator:
         ^NSComparisonResult(id a, id b) {
-            NSString *first = (NSString*)a;
-            NSString *second = (NSString*)b;
+            NSString *first = (NSString *)a;
+            NSString *second = (NSString *)b;
             return [first compare:second];
       }];
     
     // update UI
     dispatch_async(dispatch_get_main_queue(), ^(void){
-      [self.refreshControl endRefreshing];
-      self.countryToPlacesMap = placesMap;
-      self.sortedContries = sortedCountries;
-      [self.tableView reloadData];
+      [weakSelf.refreshControl endRefreshing];
+      weakSelf.countryToPlacesMap = placesMap;
+      weakSelf.sortedContries = sortedCountries;
+      [weakSelf.tableView reloadData];
     });
   });
 }
 
 
 // convert the places list to the country->places map
-+ (NSDictionary *)contriesMappingForPlacesArray:(NSArray*)places {
++ (NSDictionary *)contriesMappingForPlacesArray:(NSArray<id<PlaceInfo>> *)places {
   NSMutableDictionary *countryToPlacesMap = [[NSMutableDictionary alloc] init];
-  for (NSDictionary *place in places) {
-    NSArray *placesInfo =  [[place valueForKeyPath:FLICKR_PLACE_NAME]
-                            componentsSeparatedByString:@", "];
-    
-    //country is the last part of the place name
-    NSString *country = [placesInfo lastObject];
+  for (id<PlaceInfo> place in places) {
     
     //add the place under the corresponding country key
     
-    if (![countryToPlacesMap objectForKey:country]) {
-      countryToPlacesMap[country] = [[NSMutableArray alloc] init];
+    if (![countryToPlacesMap objectForKey:place.country]) {
+      countryToPlacesMap[place.country] = [[NSMutableArray alloc] init];
     }
     
-    [countryToPlacesMap[country] addObject:place];
+    [countryToPlacesMap[place.country] addObject:place];
   }
 
   
@@ -99,11 +88,10 @@ NS_ASSUME_NONNULL_BEGIN
   for (NSString *country in countryToPlacesMap.allKeys) {
     NSArray *places = countryToPlacesMap[country];
     NSArray *sortedPlaces = [places sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
-      NSDictionary *aDict =  (NSDictionary *)a;
-      NSDictionary *bDict =  (NSDictionary *)b;
-      NSString *aName =  [aDict valueForKeyPath:FLICKR_PLACE_NAME];
-      NSString *bName =  [bDict valueForKeyPath:FLICKR_PLACE_NAME];
-      return [aName compare:bName];
+      id<PlaceInfo> aPlace = (id<PlaceInfo>)a;
+      id<PlaceInfo> bPlace = (id<PlaceInfo>)b;
+      
+      return [aPlace compare:bPlace];
     }];
     
     countryToPlacesMap[country] = sortedPlaces;
@@ -126,6 +114,9 @@ NS_ASSUME_NONNULL_BEGIN
     //set the placeInfo for the incoming VC
     NSString *country = self.sortedContries[path.section];
     tpvc.placeInfo = self.countryToPlacesMap[country][path.row];
+    
+    //propagate the placePhotosProvider
+    tpvc.placesPhotosProvider = self.placesPhotosProvider;
   }
 }
 
@@ -152,18 +143,11 @@ NS_ASSUME_NONNULL_BEGIN
          cellForRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
   UITableViewCell *cell;
   cell = [self.tableView dequeueReusableCellWithIdentifier:@"FlickrPlacesCell"];
-  NSString *country = self.sortedContries[indexPath.section];
-  NSArray *placesInfo =  [[self.countryToPlacesMap[country][indexPath.row]
-                                      valueForKeyPath:FLICKR_PLACE_NAME]
-                          componentsSeparatedByString:@", "];
   
-  cell.textLabel.text = [placesInfo firstObject];
-  NSString *details = @"-";
-  if ([placesInfo count] >= 3) {
-    //cut out the middle of the placesInfo array (all but the first and the last one)
-    details = [[placesInfo subarrayWithRange:NSMakeRange(1, [placesInfo count] - 2)] componentsJoinedByString:@", "];
-  }
-  cell.detailTextLabel.text = details;
+  NSString *country = self.sortedContries[indexPath.section];
+  id<PlaceInfo> placeInfo = self.countryToPlacesMap[country][indexPath.row];
+  cell.textLabel.text = placeInfo.title;
+  cell.detailTextLabel.text = placeInfo.details;
   return cell;
 }
 

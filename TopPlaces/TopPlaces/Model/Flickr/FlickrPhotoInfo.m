@@ -29,6 +29,8 @@ NS_ASSUME_NONNULL_BEGIN
   }
   return photoTitle;
 }
+
+
 - (NSString *)details {
   NSString *photoDetails =  [self.photoData valueForKeyPath:FLICKR_PHOTO_DESCRIPTION];
   NSString *photoTitle =  [self.photoData valueForKeyPath:FLICKR_PHOTO_TITLE];
@@ -36,7 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
     if (![photoDetails length]) {
       photoDetails = @"no-details";
     } else {
-      photoDetails = @""; //if already used in tit	le
+      photoDetails = @""; //if already used in title
     }
   }
   return photoDetails;

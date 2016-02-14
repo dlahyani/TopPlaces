@@ -13,6 +13,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// The list of photo's data in the Flickr format
 /// To be read only once fetchPhotos was invoked.
 @property (strong, nonatomic) NSArray<id<PhotoInfo>> *photosInfo;
+
+/// TODO:
+@property (strong, nonatomic) id<PlacesPhotosProvider> placesPhotosProvider;
 @end
 
 NS_ASSUME_NONNULL_END

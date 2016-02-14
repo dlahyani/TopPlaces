@@ -29,6 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
     DetailsPhotoViewController *dpvc = nvc.viewControllers[0];
     NSIndexPath *path = [self.tableView indexPathForCell:(UITableViewCell *)sender];
     dpvc.photoInfo = self.photosInfo[path.row];
+    dpvc.placesPhotosProvider = self.placesPhotosProvider;
   }
 }
 

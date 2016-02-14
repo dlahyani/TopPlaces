@@ -108,9 +108,8 @@ NS_ASSUME_NONNULL_BEGIN
       [weakSelf.scrollView addSubview:weakSelf.imageView];
       weakSelf.scrollView.contentSize = weakSelf.imageView.bounds.size;
       
-      //TODO fix: why do we need this, why scrollView origin is not 0
-      weakSelf.scrollView.scrollIndicatorInsets   = UIEdgeInsetsMake(0, 0, 0, 0);
-      weakSelf.scrollView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
+      //TODO fix: why do we need this
+//      weakSelf.scrollView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
     });
   });
 }
