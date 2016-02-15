@@ -16,7 +16,12 @@ static const int kHistoryLogLength = 20;
 + (NSArray<id<PhotoInfo>>*)historyArray {
   NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
   NSData *encodedPhotos = [prefs objectForKey:PHOTOS_HISTORY_PREF_KEY];
-  NSArray *photos = [NSKeyedUnarchiver unarchiveObjectWithData:encodedPhotos];
+  NSArray *photos = nil;
+  
+  if (encodedPhotos) {
+    photos = [NSKeyedUnarchiver unarchiveObjectWithData:encodedPhotos];
+  }
+  
   if (!photos) {
     photos = [[NSArray alloc] init];
   }
