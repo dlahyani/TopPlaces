@@ -4,13 +4,13 @@
 #import "FlickrPlacesPhotosProvider.h"
 
 #import "FlickrFetcher.h"
-#import "PhotosHistory.h"
 #import "FlickrPhotoInfo.h"
 #import "FlickrPlaceInfo.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @implementation FlickrPlacesPhotosProvider
+
 - (NSArray<id<PlaceInfo>> *)downloadPlaces {
   //download and convert places to array
   NSURL *url = [FlickrFetcher URLforTopPlaces];
@@ -54,8 +54,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 - (UIImage *)downloadPhoto:(id<PhotoInfo>)photoInfo {
-  
-  [PhotosHistory addPhotoInfo:photoInfo];
   
   NSURL *photoUrl = photoInfo.url;
   
