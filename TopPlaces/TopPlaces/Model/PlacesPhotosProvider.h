@@ -43,20 +43,26 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 
-
 /// Places and image lists provider abtraction
 @protocol PlacesPhotosProvider
 
 /// Download the places list
-- (NSArray<id<PlaceInfo>> *)downloadPlaces;
+- (NSURLSessionDownloadTask *)downloadPlacesWithCompletionHandler:
+        (void(^)(NSArray<id<PlaceInfo>> *placesInfo, NSError *error))downloadCompleteBlock;
+
 
 
 /// Download the photos list of the specific \c placeInfo
-- (NSArray<id<PhotoInfo>> *)downloadPhotosInfoForPlace:(id<PlaceInfo>)placeInfo
-                                        withMaxResults:(NSUInteger)maxResults;
+- (NSURLSessionDownloadTask *)downloadPhotosInfoForPlace:(id<PlaceInfo>)placeInfo
+                                          withMaxResults:(NSUInteger)maxResults
+                                        completionHandler:
+                                              (void(^)(NSArray<id<PhotoInfo>> *photosInfo,
+                                                       NSError *error))downloadCompleteBlock;
 
 /// Download the photo linked from \c photoInfo
-- (UIImage *)downloadPhoto:(id<PhotoInfo>)photoInfo;
+- (NSURLSessionDownloadTask *)downloadPhoto:(id<PhotoInfo>)photoInfo
+                           completionHandler:(void(^)(UIImage *img,
+                                                      NSError *error))downloadCompleteBlock;
 
 @end
 

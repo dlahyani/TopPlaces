@@ -12,12 +12,10 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @implementation PhotosTableViewController
-#pragma mark - UIView overrides
-- (void)viewDidLoad {
-  [super viewDidLoad];
-  
-  [self fetchPhotos]; //TODO: need to move this as it being called for all tabs even if not shown
-}
+
+#pragma mark -
+#pragma mark UIViewController overrides
+#pragma mark - 
 
 - (void) fetchPhotos {
   //abstract
@@ -36,8 +34,10 @@ NS_ASSUME_NONNULL_BEGIN
   }
 }
 
+#pragma mark -
+#pragma mark UITableViewDataSource overrides
+#pragma mark -
 
-#pragma mark - UITableViewDataSource overrides
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
   return [self.photosInfo count];
 }

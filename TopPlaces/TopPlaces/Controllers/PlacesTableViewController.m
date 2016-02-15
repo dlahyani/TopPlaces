@@ -11,26 +11,34 @@ NS_ASSUME_NONNULL_BEGIN
 @interface PlacesTableViewController() <UISplitViewControllerDelegate>
 @property (strong, nonatomic) NSDictionary *countryToPlacesMap;
 @property (strong, nonatomic) NSArray<NSString*> *sortedContries;
+@property (strong, nonatomic) NSURLSessionTask *downloadTask;
 @end
 @implementation PlacesTableViewController
 
-#pragma mark - UIViewController overrides
+#pragma mark -
+#pragma mark UIViewController overrides
+#pragma mark -
+
 - (void)viewDidLoad {
+  NSLog(@"PlacesTableViewController viewDidLoad");
   [super viewDidLoad];
   [self.refreshControl addTarget:self
                           action:@selector(handleRefresh:)
                 forControlEvents:UIControlEventValueChanged];
 
-  
-  AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-  self.placesPhotosProvider = appDelegate.placesPhotosProvider;
-  
-  [self fetchPlaces]; //TODO: move this out to willappaer with once time flag for somethign
+  //invoke initial fetch
+  [self fetchPlaces];
 }
 
 
 - (void)awakeFromNib {
+  NSLog(@"PlacesTableViewController awakeFromNib");
   [super awakeFromNib];
+  
+  // get the placesPhotosProvider for downloading places list
+  AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+  self.placesPhotosProvider = appDelegate.placesPhotosProvider;
+
   //this has to be done as early as possible
   self.splitViewController.delegate = self;
   self.splitViewController.preferredDisplayMode = UISplitViewControllerDisplayModeAllVisible;
@@ -38,42 +46,55 @@ NS_ASSUME_NONNULL_BEGIN
 
 }
 
+- (void) viewDidDisappear:(BOOL)animated {
+  [super viewDidDisappear:animated];
+  NSLog(@"PlacesTableViewController::viewDidDisappear");
+  [self.downloadTask cancel];
+}
 
-#pragma mark - places getting and pre-processing logic
+
+#pragma mark -
+#pragma mark places getting and pre-processing logic
+#pragma mark -
+
 - (void)handleRefresh:(UIRefreshControl *)refreshControl {
   [self fetchPlaces];
 }
 
 
 - (void)fetchPlaces {
+  NSLog(@"PlacesTableViewController::fetchPlaces");
   [self.refreshControl beginRefreshing];
-  
-  //in background:
   __weak PlacesTableViewController *weakSelf = self;
-  dispatch_queue_t fetchPhoto = dispatch_queue_create("flickr fetcher", NULL);
-  dispatch_async(fetchPhoto, ^(void){
-    
-    NSArray<id<PlaceInfo>> *places = [weakSelf.placesPhotosProvider downloadPlaces];
-    
-    // convert the flat list to country->places map
-    NSDictionary *placesMap = [PlacesTableViewController contriesMappingForPlacesArray:places];
-    
-    //sort the countries list
-    NSArray *sortedCountries = [placesMap.allKeys sortedArrayUsingComparator:
-        ^NSComparisonResult(id a, id b) {
-            NSString *first = (NSString *)a;
-            NSString *second = (NSString *)b;
-            return [first compare:second];
-      }];
-    
-    // update UI
-    dispatch_async(dispatch_get_main_queue(), ^(void){
-      [weakSelf.refreshControl endRefreshing];
-      weakSelf.countryToPlacesMap = placesMap;
-      weakSelf.sortedContries = sortedCountries;
-      [weakSelf.tableView reloadData];
-    });
-  });
+  self.downloadTask =
+      [self.placesPhotosProvider downloadPlacesWithCompletionHandler:
+            ^(NSArray<id<PlaceInfo>> *placesInfo, NSError *error) {
+              
+              [weakSelf.refreshControl endRefreshing];
+
+              if (!placesInfo || error) {
+                return;
+              }
+              
+              // convert the flat list to country->places map
+              NSDictionary *placesMap = [PlacesTableViewController
+                                         contriesMappingForPlacesArray:placesInfo];
+              
+              //sort the countries list
+              NSArray *sortedCountries = [placesMap.allKeys sortedArrayUsingComparator:
+                                          ^NSComparisonResult(id a, id b) {
+                                            NSString *first = (NSString *)a;
+                                            NSString *second = (NSString *)b;
+                                            return [first compare:second];
+                                          }];
+              
+              // update UI:
+              weakSelf.countryToPlacesMap = placesMap;
+              weakSelf.sortedContries = sortedCountries;
+              [weakSelf.tableView reloadData];
+            }];
+  
+  
 }
 
 
@@ -128,8 +149,10 @@ NS_ASSUME_NONNULL_BEGIN
   }
 }
 
+#pragma mark -
+#pragma mark table view controller overrides
+#pragma mark -
 
-#pragma mark - table view controller overrides
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
   return [self.sortedContries count];
 }
@@ -159,8 +182,10 @@ NS_ASSUME_NONNULL_BEGIN
   return cell;
 }
 
+#pragma mark -
+#pragma mark split view delegates
+#pragma mark -
 
-#pragma mark - split view delegates
 - (BOOL)splitViewController:(UISplitViewController *)splitViewController
     collapseSecondaryViewController:(UIViewController *)secondaryViewController
     ontoPrimaryViewController:(UIViewController *)primaryViewController {

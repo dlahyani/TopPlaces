@@ -13,11 +13,14 @@ NS_ASSUME_NONNULL_BEGIN
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (weak, nonatomic) IBOutlet UILabel *noImageLoadedView;
 @property (strong, nonatomic) UIImageView *imageView;
-
+@property (strong, nonatomic) NSURLSessionTask *downloadTask;
 @end
 
 @implementation DetailsPhotoViewController
-#pragma mark - UIView overrides
+
+#pragma mark -
+#pragma mark UIViewController overrides
+#pragma mark -
 
 - (void)viewDidLoad {
   [super viewDidLoad];
@@ -63,7 +66,16 @@ NS_ASSUME_NONNULL_BEGIN
   }
 }
 
-#pragma mark - UIScrollViewDelegate impl
+- (void) viewDidDisappear:(BOOL)animated {
+  [super viewDidDisappear:animated];
+  NSLog(@"DetailsPhotoViewController::viewDidDisappear");
+  [self.downloadTask cancel];
+}
+
+#pragma mark -
+#pragma mark UIScrollViewDelegate impl
+#pragma mark -
+
 - (nullable UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView {
   return self.imageView;
 }
@@ -73,8 +85,10 @@ NS_ASSUME_NONNULL_BEGIN
   [self centerScrollViewContents];
 }
 
+#pragma mark -
+#pragma mark aux logic
+#pragma mark -
 
-#pragma mark - aux logic
 - (void)loadImage {
   //in ipad info can be missing
   if (!self.photoInfo) {
@@ -87,30 +101,26 @@ NS_ASSUME_NONNULL_BEGIN
   [self.spinner startAnimating];
 
   __weak DetailsPhotoViewController *weakSelf = self;
-  dispatch_queue_t fetchPhoto = dispatch_queue_create("picture of photo", NULL);
-  dispatch_async(fetchPhoto, ^(void){
-    //get the image
-    UIImage *img = [weakSelf.placesPhotosProvider downloadPhoto:weakSelf.photoInfo];
-    
-    //show it (on UI thread)
-    dispatch_async(dispatch_get_main_queue(), ^(void){
-      [weakSelf.spinner stopAnimating];
-      
-      //if download failed
-      if (!img) {
-        weakSelf.noImageLoadedView.hidden = NO;
-        return;
-      }
+  self.downloadTask =
+      [self.placesPhotosProvider downloadPhoto:self.photoInfo
+                             completionHandler:^(UIImage *img, NSError *error) {
+                               [weakSelf.spinner stopAnimating];
+                               
+                               //if download failed
+                               if (!img || error) {
+                                 weakSelf.noImageLoadedView.hidden = NO;
+                                 return;
+                               }
+                               
+                               weakSelf.title = weakSelf.photoInfo.title;
+                               
+                               weakSelf.imageView = [[UIImageView alloc] initWithImage:img];
+                               weakSelf.imageView.frame = CGRectMake(0, 0, img.size.width, img.size.height);
+                               
+                               [weakSelf.scrollView addSubview:weakSelf.imageView];
+                               weakSelf.scrollView.contentSize = weakSelf.imageView.bounds.size;
+                             }];
 
-      weakSelf.title = weakSelf.photoInfo.title;
-      
-      weakSelf.imageView = [[UIImageView alloc] initWithImage:img];
-      weakSelf.imageView.frame = CGRectMake(0, 0, img.size.width, img.size.height);
-      
-      [weakSelf.scrollView addSubview:weakSelf.imageView];
-      weakSelf.scrollView.contentSize = weakSelf.imageView.bounds.size;
-    });
-  });
 }
 
 
@@ -167,8 +177,10 @@ NS_ASSUME_NONNULL_BEGIN
   return CGPointMake(centerX, centerY);
 }
 
+#pragma mark -
+#pragma mark for debug
+#pragma mark -
 
-#pragma mark - for debug
 NSString *StrCGPoint(CGPoint p) {
   return [NSString stringWithFormat:@"{%d, %d}", (int)p.x, (int)p.y];
 }
@@ -178,6 +190,7 @@ NSString *StrCGRect(CGRect r) {
   return [NSString stringWithFormat:@"o - {%d, %d}, s - {%d, %d}", (int)r.origin.x, (int)r.origin.y,
               (int)r.size.width, (int)r.size.height];
 }
+
 
 @end
 

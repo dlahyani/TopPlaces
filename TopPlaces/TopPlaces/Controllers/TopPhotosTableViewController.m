@@ -4,16 +4,23 @@
 #import "TopPhotosTableViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
-
+@interface TopPhotosTableViewController ()
+@property (strong, nonatomic) NSURLSessionTask *downloadTask;
+@end
 @implementation TopPhotosTableViewController
 
-#pragma mark - UIView overrides
+#pragma mark -
+#pragma mark UIViewController overrides
+#pragma mark -
 
 - (void)viewDidLoad {
+  NSLog(@"TopPhotosTableViewController::viewDidLoad");
   [super viewDidLoad];
   [self.refreshControl addTarget:self
                           action:@selector(handleRefresh:)
                 forControlEvents:UIControlEventValueChanged];
+
+  [self fetchPhotos];
 }
 
 
@@ -22,33 +29,41 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 
+- (void) viewDidDisappear:(BOOL)animated {
+  [super viewDidDisappear:animated];
+  NSLog(@"TopPhotosTableViewController::viewDidDisappear");
+  [self.downloadTask cancel];
+}
 
-#pragma mark - PhotosTableViewController overrides
+
+#pragma mark -
+#pragma mark PhotosTableViewController overrides
+#pragma mark -
+
 // fetch photos from Flickr from a certain place and set them in self.photos
 - (void)fetchPhotos {
+  NSLog(@"TopPhotosTableViewController::fetchPhotos");
   [self.refreshControl beginRefreshing];
   
   // WA for refreshControl not appearing
   self.tableView.contentOffset = CGPointMake(0, -CGRectGetHeight(self.refreshControl.frame));
   
-  // in background:
   __weak TopPhotosTableViewController *weakSelf = self;
-  dispatch_queue_t fetchPhoto = dispatch_queue_create("photos in place", NULL);
-  dispatch_async(fetchPhoto, ^(void){
-
-    NSArray<id<PhotoInfo>> *photos = [weakSelf.placesPhotosProvider
-                                          downloadPhotosInfoForPlace:weakSelf.placeInfo
-                                                      withMaxResults:50];
-    
-    // update UI
-    dispatch_async(dispatch_get_main_queue(), ^(void){
-      [weakSelf.refreshControl endRefreshing];
-      weakSelf.photosInfo = photos;
-      [weakSelf.tableView reloadData];
-    });
-  });
-  
+  //download the photos info
+  self.downloadTask = [self.placesPhotosProvider
+                       downloadPhotosInfoForPlace:self.placeInfo
+                         withMaxResults:50
+                       completionHandler:^(NSArray<id<PhotoInfo>> *photosInfo, NSError *error) {
+                         // update UI
+                         [weakSelf.refreshControl endRefreshing];
+                         if (!photosInfo || error) {
+                           return;
+                         }
+                         weakSelf.photosInfo = photosInfo;
+                         [weakSelf.tableView reloadData];
+                       }];
 }
+
 
 @end
 
