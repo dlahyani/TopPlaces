@@ -8,12 +8,20 @@
 
 #import "AppDelegate.h"
 
+#import "FlickrPlacesPhotosProvider.h"
+
 @interface AppDelegate ()
 
 @end
 
 @implementation AppDelegate
 
+- (id<PlacesPhotosProvider>)placesPhotosProvider {
+  if (!_placesPhotosProvider) {
+    _placesPhotosProvider = [[FlickrPlacesPhotosProvider alloc] init];
+  }
+  return _placesPhotosProvider;
+}
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   // Override point for customization after application launch.
