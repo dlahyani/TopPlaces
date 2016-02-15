@@ -2,7 +2,9 @@
 // Created by Gennadi Iosad.
 
 #import "DetailsPhotoViewController.h"
+
 #import "PhotosHistory.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface DetailsPhotoViewController()<UIScrollViewDelegate>
@@ -17,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 @implementation DetailsPhotoViewController
 #pragma mark - UIView overrides
 
-- (void) viewDidLoad {
+- (void)viewDidLoad {
   [super viewDidLoad];
   self.scrollView.delegate = self;
   
@@ -46,13 +48,13 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 
-- (void) viewDidAppear:(BOOL)animated {
+- (void)viewDidAppear:(BOOL)animated {
   NSLog(@"DetailsPhotoViewController::viewDidAppear");
   [super viewDidAppear:animated];
 }
 
 
-- (void) viewDidLayoutSubviews {
+- (void)viewDidLayoutSubviews {
   NSLog(@"DetailsPhotoViewController::viewDidLayoutSubviews");
   [super viewDidLayoutSubviews];
 
@@ -79,7 +81,7 @@ NS_ASSUME_NONNULL_BEGIN
     return;
   }
 
- //TODO:fix [PhotosHistory addPhotoInfo:self.photoInfo];
+  [PhotosHistory addPhotoInfo:self.photoInfo];
   
   self.noImageLoadedView.hidden = YES;
   [self.spinner startAnimating];
@@ -156,7 +158,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 //return the scroll view center
-- (CGPoint) scrollViewCenter {
+- (CGPoint)scrollViewCenter {
   CGSize scrollViewSize = CGRectStandardize(self.scrollView.bounds).size;
   UIEdgeInsets contentInset = self.scrollView.contentInset;
   CGFloat centerX = (scrollViewSize.width - contentInset.left - contentInset.right)/2.0;
@@ -176,6 +178,7 @@ NSString *StrCGRect(CGRect r) {
   return [NSString stringWithFormat:@"o - {%d, %d}, s - {%d, %d}", (int)r.origin.x, (int)r.origin.y,
               (int)r.size.width, (int)r.size.height];
 }
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -9,14 +9,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - UIView overrides
 
-- (void) viewDidLoad {
+- (void)viewDidLoad {
   [super viewDidLoad];
   [self.refreshControl addTarget:self
                           action:@selector(handleRefresh:)
                 forControlEvents:UIControlEventValueChanged];
 }
 
-- (void) handleRefresh:(UIRefreshControl *)refreshControl {
+
+- (void)handleRefresh:(UIRefreshControl *)refreshControl {
   [self fetchPhotos];
 }
 
@@ -24,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - PhotosTableViewController overrides
 // fetch photos from Flickr from a certain place and set them in self.photos
-- (void) fetchPhotos {
+- (void)fetchPhotos {
   [self.refreshControl beginRefreshing];
   
   // WA for refreshControl not appearing

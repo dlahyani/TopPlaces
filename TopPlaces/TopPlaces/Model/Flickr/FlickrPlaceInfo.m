@@ -6,11 +6,13 @@
 #import "FlickrFetcher.h"
 
 NS_ASSUME_NONNULL_BEGIN
+
 @interface FlickrPlaceInfo ()
 @property (strong, nonatomic) NSDictionary *placeData;
 @end
+
 @implementation FlickrPlaceInfo
-- (instancetype) initWithDictionary:(NSDictionary*)dict {
+- (instancetype)initWithDictionary:(NSDictionary*)dict {
   if (self = [super init]) {
     self.placeData = dict;
   }
@@ -45,13 +47,13 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 
-- (NSURL*) getURLOfPhotoInfoArrayWithMaxLength:(NSUInteger)maxLength {
+- (NSURL *)urlOfPhotoInfoArrayWithMaxLength:(NSUInteger)maxLength {
   return [FlickrFetcher URLforPhotosInPlace:[self.placeData valueForKeyPath:FLICKR_PLACE_ID]
                           maxResults:(int)maxLength];
 }
 
 
-- (NSComparisonResult) compare:(id<PlaceInfo>)other {
+- (NSComparisonResult)compare:(id<PlaceInfo>)other {
   //TODO: check if cast is legit
   NSString *otherPlaceName = [((FlickrPlaceInfo *)other).placeData valueForKeyPath:FLICKR_PLACE_NAME];
   NSString *placeName = [self.placeData valueForKeyPath:FLICKR_PLACE_NAME];

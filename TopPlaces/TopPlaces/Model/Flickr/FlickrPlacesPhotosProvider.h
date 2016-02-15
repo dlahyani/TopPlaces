@@ -2,7 +2,7 @@
 // Created by Gennadi Iosad.
 
 #import "PlacesPhotosProvider.h"
-
+//todo: doc
 NS_ASSUME_NONNULL_BEGIN
 @interface FlickrPlacesPhotosProvider : NSObject<PlacesPhotosProvider>
 - (UIImage *)downloadPhoto:(id<PhotoInfo>)photoInfo;

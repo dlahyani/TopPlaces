@@ -2,8 +2,10 @@
 // Created by Gennadi Iosad.
 
 #import "PhotosTableViewController.h"
+
 #import "DetailsPhotoViewController.h"
 #import "PlacesPhotosProvider.h"
+
 NS_ASSUME_NONNULL_BEGIN
 @interface PhotosTableViewController()
 
@@ -11,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @implementation PhotosTableViewController
 #pragma mark - UIView overrides
-- (void) viewDidLoad {
+- (void)viewDidLoad {
   [super viewDidLoad];
   
   [self fetchPhotos]; //TODO: need to move this as it being called for all tabs even if not shown
@@ -23,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 
-- (void) prepareForSegue:(UIStoryboardSegue *)segue sender:(nullable id)sender {
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(nullable id)sender {
   if ([segue.identifier isEqualToString:@"showPhoto"]) {
     NSLog(@"prepareForSegue: showPhoto");
     UINavigationController *nvc = (UINavigationController *)segue.destinationViewController;
@@ -36,7 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 #pragma mark - UITableViewDataSource overrides
-- (NSInteger) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
   return [self.photosInfo count];
 }
 
@@ -56,8 +58,6 @@ NS_ASSUME_NONNULL_BEGIN
   
   return cell;
 }
-
-
 
 @end
 

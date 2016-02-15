@@ -2,8 +2,8 @@
 // Created by Gennadi Iosad.
 
 #import "PlacesTableViewController.h"
-#import "TopPhotosTableViewController.h"
 
+#import "TopPhotosTableViewController.h"
 #import "AppDelegate.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 @implementation PlacesTableViewController
 
 #pragma mark - UIViewController overrides
-- (void) viewDidLoad {
+- (void)viewDidLoad {
   [super viewDidLoad];
   [self.refreshControl addTarget:self
                           action:@selector(handleRefresh:)
@@ -40,12 +40,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 #pragma mark - places getting and pre-processing logic
-- (void) handleRefresh:(UIRefreshControl *)refreshControl {
+- (void)handleRefresh:(UIRefreshControl *)refreshControl {
   [self fetchPlaces];
 }
 
 
-- (void) fetchPlaces {
+- (void)fetchPlaces {
   [self.refreshControl beginRefreshing];
   
   //in background:
@@ -109,7 +109,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 
-- (void) prepareForSegue:(UIStoryboardSegue *)segue sender:(__nullable id)sender {
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(__nullable id)sender {
   if ([segue.identifier isEqualToString:@"showPhotosOfPlace"]) {
     NSLog(@"prepareForSegue: showPhotosOfPlaces");
     
@@ -141,7 +141,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 
-- (NSInteger) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
   NSString *country = self.sortedContries[section];
   return [self.countryToPlacesMap[country] count];
 }
@@ -161,11 +161,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 #pragma mark - split view delegates
-- (BOOL) splitViewController:(UISplitViewController *)splitViewController
+- (BOOL)splitViewController:(UISplitViewController *)splitViewController
     collapseSecondaryViewController:(UIViewController *)secondaryViewController
     ontoPrimaryViewController:(UIViewController *)primaryViewController {
   return YES; //show master view by default
 }
+
 @end
 
 NS_ASSUME_NONNULL_END

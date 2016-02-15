@@ -2,16 +2,18 @@
 // Created by Gennadi Iosad.
 
 NS_ASSUME_NONNULL_BEGIN
-@protocol PlaceInfo
 
+@protocol PlaceInfo
+//todo: doc
 @property (nonatomic, readonly) NSString *title;
 @property (nonatomic, readonly) NSString *details;
 @property (nonatomic, readonly) NSString *country;
 
 - (NSComparisonResult) compare:(id<PlaceInfo>)other;
-- (NSURL*) getURLOfPhotoInfoArrayWithMaxLength:(NSUInteger)maxLength;
+- (NSURL*) urlOfPhotoInfoArrayWithMaxLength:(NSUInteger)maxLength;
 
 @end
+
 
 @protocol PhotoInfo<NSCoding>
 
@@ -20,6 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) NSURL *url;
 
 @end
+
 
 @protocol PlacesPhotosProvider
 
@@ -31,4 +34,5 @@ NS_ASSUME_NONNULL_BEGIN
 - (UIImage *)downloadPhoto:(id<PhotoInfo>)photoInfo;
 
 @end
+
 NS_ASSUME_NONNULL_END

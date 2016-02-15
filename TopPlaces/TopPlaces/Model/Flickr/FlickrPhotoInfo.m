@@ -6,12 +6,16 @@
 #import "FlickrFetcher.h"
 
 NS_ASSUME_NONNULL_BEGIN
+
 @interface FlickrPhotoInfo ()
+
 @property (strong, nonatomic) NSDictionary *photoData;
+
 @end
+
 @implementation FlickrPhotoInfo
 
-- (instancetype) initWithDictionary:(NSDictionary *)dict {
+- (instancetype)initWithDictionary:(NSDictionary *)dict {
   if (self = [super init]) {
     self.photoData = dict;
   }
@@ -59,7 +63,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 
-- (NSURL *) url {
+- (NSURL *)url {
   NSURL *photoUrl = [FlickrFetcher URLforPhoto:self.photoData format:FlickrPhotoFormatOriginal];
   
   if (!photoUrl) {

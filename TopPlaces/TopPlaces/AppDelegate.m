@@ -16,7 +16,7 @@
 
 @implementation AppDelegate
 
-- (id<PlacesPhotosProvider>) placesPhotosProvider {
+- (id<PlacesPhotosProvider>)placesPhotosProvider {
   if (!_placesPhotosProvider) {
     _placesPhotosProvider = [[FlickrPlacesPhotosProvider alloc] init];
   }

@@ -32,7 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSArray<id<PhotoInfo>> *)downloadPhotosInfoForPlace:(id<PlaceInfo>)placeInfo
                                         withMaxResults:(NSUInteger)maxResults {
   // download the photos list info and convert it array
-  NSURL *url = [placeInfo getURLOfPhotoInfoArrayWithMaxLength:maxResults];
+  NSURL *url = [placeInfo urlOfPhotoInfoArrayWithMaxLength:maxResults];
   
   NSData *jsonResults = [NSData dataWithContentsOfURL:url];
   NSDictionary *propertyListResults = [NSJSONSerialization JSONObjectWithData:jsonResults
@@ -44,7 +44,7 @@ NS_ASSUME_NONNULL_BEGIN
   return [self convertPhotosDataToInfoArray:photosData];
 }
 
-- (NSArray<id<PhotoInfo>> *) convertPhotosDataToInfoArray:(NSArray *)photosData {
+- (NSArray<id<PhotoInfo>> *)convertPhotosDataToInfoArray:(NSArray *)photosData {
   NSMutableArray<FlickrPhotoInfo*> *photosInfo = [[NSMutableArray alloc] initWithCapacity:[photosData count]];
   for (NSDictionary *d in photosData) {
     [photosInfo addObject:[[FlickrPhotoInfo alloc] initWithDictionary:d]];

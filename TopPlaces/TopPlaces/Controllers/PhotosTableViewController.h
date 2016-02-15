@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// To be read only once fetchPhotos was invoked.
 @property (strong, nonatomic) NSArray<id<PhotoInfo>> *photosInfo;
 
-/// TODO:
+/// TODO:doc
 @property (strong, nonatomic) id<PlacesPhotosProvider> placesPhotosProvider;
 @end
 
