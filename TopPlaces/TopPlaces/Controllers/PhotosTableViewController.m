@@ -13,12 +13,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @implementation PhotosTableViewController
 #pragma mark - UIView overrides
-- (void)viewDidLoad {
-  [super viewDidLoad];
-  
-  [self fetchPhotos]; //TODO: need to move this as it being called for all tabs even if not shown
-}
-
 - (void) fetchPhotos {
   //abstract
   assert(0);

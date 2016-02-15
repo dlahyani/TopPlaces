@@ -15,20 +15,30 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - UIView overrides
 - (void)awakeFromNib {
+  NSLog(@"RecentPhotosTableViewController::awakeFromNib");
+
   [super awakeFromNib];
+  
+  // get placePhotosProvider for downloading the images, there's no parent controller to provide it
+  // so we do it here
+  AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+  self.placesPhotosProvider = appDelegate.placesPhotosProvider;
+
   // do this early so the splitViewController will talk to the delegate
   self.splitViewController.delegate = self;
   self.splitViewController.preferredDisplayMode = UISplitViewControllerDisplayModeAllVisible;
+
 }
 
-
+- (void)viewDidLoad {
+  NSLog(@"RecentPhotosTableViewController::viewDidLoad");
+  [super viewDidLoad];
+  
+}
 
 - (void)viewWillAppear:(BOOL)animated {
   [super viewWillAppear:animated];
   
-  //TODO: find a proper place for this
-  AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-  self.placesPhotosProvider = appDelegate.placesPhotosProvider;
   
   //history updates frequently so we want to udpate every time we show images
   [self fetchPhotos];
@@ -46,6 +56,8 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - PhotosTableViewController override
 
 - (void)fetchPhotos {
+  NSLog(@"RecentPhotosTableViewController::fetchPhotos");
+
   self.photosInfo = [PhotosHistory historyArray];
   [self.tableView reloadData];
 }

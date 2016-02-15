@@ -16,21 +16,25 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - UIViewController overrides
 - (void)viewDidLoad {
+  NSLog(@"PlacesTableViewController viewDidLoad");
   [super viewDidLoad];
   [self.refreshControl addTarget:self
                           action:@selector(handleRefresh:)
                 forControlEvents:UIControlEventValueChanged];
 
-  
-  AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-  self.placesPhotosProvider = appDelegate.placesPhotosProvider;
-  
-  [self fetchPlaces]; //TODO: move this out to willappaer with once time flag for somethign
+  //invoke initial fetch
+  [self fetchPlaces];
 }
 
 
 - (void)awakeFromNib {
+  NSLog(@"PlacesTableViewController awakeFromNib");
   [super awakeFromNib];
+  
+  // get the placesPhotosProvider for downloading places list
+  AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+  self.placesPhotosProvider = appDelegate.placesPhotosProvider;
+
   //this has to be done as early as possible
   self.splitViewController.delegate = self;
   self.splitViewController.preferredDisplayMode = UISplitViewControllerDisplayModeAllVisible;
@@ -46,6 +50,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 - (void)fetchPlaces {
+  NSLog(@"PlacesTableViewController::fetchPlaces");
   [self.refreshControl beginRefreshing];
   
   //in background:
@@ -66,7 +71,7 @@ NS_ASSUME_NONNULL_BEGIN
             return [first compare:second];
       }];
     
-    // update UI
+    // update UI:
     dispatch_async(dispatch_get_main_queue(), ^(void){
       [weakSelf.refreshControl endRefreshing];
       weakSelf.countryToPlacesMap = placesMap;
