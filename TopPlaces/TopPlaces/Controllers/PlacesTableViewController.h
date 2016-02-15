@@ -9,7 +9,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface PlacesTableViewController : UITableViewController
 
 
-///TODO:
+/// Used to download the places list
 @property (strong, nonatomic) id<PlacesPhotosProvider> placesPhotosProvider;
 @end
 

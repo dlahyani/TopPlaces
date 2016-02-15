@@ -40,7 +40,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 - (NSString *)country {
-  //TODO: review and possibly use extract...
+  //get the last part of the place name
   NSString *placeName = [self.placeData valueForKeyPath:FLICKR_PLACE_NAME];
   NSArray *components = [placeName componentsSeparatedByString:@", "];
   return [components lastObject];
@@ -54,7 +54,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 - (NSComparisonResult)compare:(id<PlaceInfo>)other {
-  //TODO: check if cast is legit
+  assert([other isKindOfClass:[FlickrPlaceInfo class]]);
   NSString *otherPlaceName = [((FlickrPlaceInfo *)other).placeData valueForKeyPath:FLICKR_PLACE_NAME];
   NSString *placeName = [self.placeData valueForKeyPath:FLICKR_PLACE_NAME];
   

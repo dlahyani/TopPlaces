@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// To be read only once fetchPhotos was invoked.
 @property (strong, nonatomic) NSArray<id<PhotoInfo>> *photosInfo;
 
-/// TODO:doc
+/// provided by the parent controller, provides a way to download images and image lists
 @property (strong, nonatomic) id<PlacesPhotosProvider> placesPhotosProvider;
 @end
 
