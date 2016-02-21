@@ -9,10 +9,15 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface PlacesTableViewController() <UISplitViewControllerDelegate>
+
 @property (strong, nonatomic) NSDictionary *countryToPlacesMap;
+
 @property (strong, nonatomic) NSArray<NSString*> *sortedContries;
+
 @property (strong, nonatomic) NSURLSessionTask *downloadTask;
+
 @end
+
 @implementation PlacesTableViewController
 
 #pragma mark -
@@ -30,7 +35,6 @@ NS_ASSUME_NONNULL_BEGIN
   [self fetchPlaces];
 }
 
-
 - (void)awakeFromNib {
   NSLog(@"PlacesTableViewController awakeFromNib");
   [super awakeFromNib];
@@ -42,8 +46,6 @@ NS_ASSUME_NONNULL_BEGIN
   //this has to be done as early as possible
   self.splitViewController.delegate = self;
   self.splitViewController.preferredDisplayMode = UISplitViewControllerDisplayModeAllVisible;
-
-
 }
 
 - (void) viewDidDisappear:(BOOL)animated {
@@ -52,7 +54,6 @@ NS_ASSUME_NONNULL_BEGIN
   [self.downloadTask cancel];
 }
 
-
 #pragma mark -
 #pragma mark places getting and pre-processing logic
 #pragma mark -
@@ -60,7 +61,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)handleRefresh:(UIRefreshControl *)refreshControl {
   [self fetchPlaces];
 }
-
 
 - (void)fetchPlaces {
   NSLog(@"PlacesTableViewController::fetchPlaces");
@@ -93,10 +93,7 @@ NS_ASSUME_NONNULL_BEGIN
               weakSelf.sortedContries = sortedCountries;
               [weakSelf.tableView reloadData];
             }];
-  
-  
 }
-
 
 // convert the places list to the country->places map
 + (NSDictionary *)contriesMappingForPlacesArray:(NSArray<id<PlaceInfo>> *)places {
@@ -111,7 +108,6 @@ NS_ASSUME_NONNULL_BEGIN
     
     [countryToPlacesMap[place.country] addObject:place];
   }
-
   
   // sort places for each country
   for (NSString *country in countryToPlacesMap.allKeys) {
@@ -128,7 +124,6 @@ NS_ASSUME_NONNULL_BEGIN
 
   return countryToPlacesMap;
 }
-
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(__nullable id)sender {
   if ([segue.identifier isEqualToString:@"showPhotosOfPlace"]) {
@@ -157,18 +152,15 @@ NS_ASSUME_NONNULL_BEGIN
   return [self.sortedContries count];
 }
 
-
 - (nullable NSString *)tableView:(UITableView *)tableView
          titleForHeaderInSection:(NSInteger)section {
   return self.sortedContries[section];
 }
 
-
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
   NSString *country = self.sortedContries[section];
   return [self.countryToPlacesMap[country] count];
 }
-
 
 - (UITableViewCell *)tableView:(UITableView *)tableView
          cellForRowAtIndexPath:(nonnull NSIndexPath *)indexPath {

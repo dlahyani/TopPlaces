@@ -8,9 +8,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// VC for presenting a list of top Flickr places
 @interface PlacesTableViewController : UITableViewController
 
-
 /// Used to download the places list
 @property (strong, nonatomic) id<PlacesPhotosProvider> placesPhotosProvider;
+
 @end
 
 NS_ASSUME_NONNULL_END

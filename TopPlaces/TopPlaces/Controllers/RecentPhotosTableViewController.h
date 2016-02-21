@@ -4,6 +4,7 @@
 #import "PhotosTableViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
+
 /// Presents list of photos based on the PhotosHistory contents
 @interface RecentPhotosTableViewController : PhotosTableViewController
 

@@ -23,18 +23,15 @@ NS_ASSUME_NONNULL_BEGIN
   [self fetchPhotos];
 }
 
-
 - (void)handleRefresh:(UIRefreshControl *)refreshControl {
   [self fetchPhotos];
 }
-
 
 - (void) viewDidDisappear:(BOOL)animated {
   [super viewDidDisappear:animated];
   NSLog(@"TopPhotosTableViewController::viewDidDisappear");
   [self.downloadTask cancel];
 }
-
 
 #pragma mark -
 #pragma mark PhotosTableViewController overrides
@@ -63,7 +60,6 @@ NS_ASSUME_NONNULL_BEGIN
                          [weakSelf.tableView reloadData];
                        }];
 }
-
 
 @end
 

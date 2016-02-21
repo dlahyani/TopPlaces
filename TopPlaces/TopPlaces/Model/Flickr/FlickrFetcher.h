@@ -47,6 +47,7 @@ typedef enum {
 + (NSURL *)URLforInformationAboutPlace:(id)flickrPlaceId;
 
 + (NSString *)extractNameOfPlace:(id)placeId fromPlaceInformation:(NSDictionary *)place;
+
 + (NSString *)extractRegionNameFromPlaceInformation:(NSDictionary *)placeInformation;
 
 @end

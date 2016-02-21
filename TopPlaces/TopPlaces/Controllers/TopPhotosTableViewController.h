@@ -6,6 +6,7 @@
 #import "PlacesPhotosProvider.h"
 
 NS_ASSUME_NONNULL_BEGIN
+
 /// VC for presenting a list of photos related to some specific place
 @interface TopPhotosTableViewController : PhotosTableViewController
 

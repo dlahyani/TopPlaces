@@ -7,9 +7,6 @@
 #import "PlacesPhotosProvider.h"
 
 NS_ASSUME_NONNULL_BEGIN
-@interface PhotosTableViewController()
-
-@end
 
 @implementation PhotosTableViewController
 
@@ -22,15 +19,16 @@ NS_ASSUME_NONNULL_BEGIN
   assert(0);
 }
 
-
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(nullable id)sender {
   if ([segue.identifier isEqualToString:@"showPhoto"]) {
     NSLog(@"prepareForSegue: showPhoto");
-    UINavigationController *nvc = (UINavigationController *)segue.destinationViewController;
-    DetailsPhotoViewController *dpvc = nvc.viewControllers[0];
+    UINavigationController *navigationController =
+        (UINavigationController *)segue.destinationViewController;
+    DetailsPhotoViewController *detailsPhotoViewController =
+        navigationController.viewControllers[0];
     NSIndexPath *path = [self.tableView indexPathForCell:(UITableViewCell *)sender];
-    dpvc.photoInfo = self.photosInfo[path.row];
-    dpvc.placesPhotosProvider = self.placesPhotosProvider;
+    detailsPhotoViewController.photoInfo = self.photosInfo[path.row];
+    detailsPhotoViewController.placesPhotosProvider = self.placesPhotosProvider;
   }
 }
 
@@ -42,7 +40,6 @@ NS_ASSUME_NONNULL_BEGIN
   return [self.photosInfo count];
 }
 
-
 - (UITableViewCell *)tableView:(UITableView *)tableView
          cellForRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
   UITableViewCell *cell;
@@ -51,10 +48,8 @@ NS_ASSUME_NONNULL_BEGIN
   NSString *photoTitle =  photoInfo.title;
   NSString *photoDetails = photoInfo.details;
   
-
   cell.textLabel.text = photoTitle;
   cell.detailTextLabel.text = photoDetails;
-  
   
   return cell;
 }

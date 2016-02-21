@@ -10,7 +10,6 @@ NS_ASSUME_NONNULL_BEGIN
 #define PHOTOS_HISTORY_PREF_KEY @"history"
 static const int kHistoryLogLength = 20;
 
-
 @implementation PhotosHistory
 
 + (NSArray<id<PhotoInfo>>*)historyArray {
@@ -27,7 +26,6 @@ static const int kHistoryLogLength = 20;
   }
   return photos;
 }
-
 
 + (void)addPhotoInfo:(id<PhotoInfo>)photoInfo {
   NSMutableArray *photos = [[PhotosHistory historyArray] mutableCopy];

@@ -7,13 +7,17 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface DetailsPhotoViewController()<UIScrollViewDelegate>
+@interface DetailsPhotoViewController() <UIScrollViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *spinner;
+
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
+
 @property (weak, nonatomic) IBOutlet UILabel *noImageLoadedView;
+
 @property (strong, nonatomic) UIImageView *imageView;
 @property (strong, nonatomic) NSURLSessionTask *downloadTask;
+
 
 @end
 
@@ -26,20 +30,15 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)viewDidLoad {
   [super viewDidLoad];
   self.scrollView.delegate = self;
-  
   UITapGestureRecognizer *doubleTapRecognizer =
       [[UITapGestureRecognizer alloc] initWithTarget:self
                                               action:@selector(scrollViewDoubleFingerTapped:)];
-  
   doubleTapRecognizer.numberOfTapsRequired = 2;
   doubleTapRecognizer.numberOfTouchesRequired = 1;
   [self.scrollView addGestureRecognizer:doubleTapRecognizer];
-
   [self loadImage];
-  
   NSLog(@"DetailsPhotoViewController::viewDidLoad self %p", self);
 }
-
 
 - (void)scrollViewDoubleFingerTapped:(UITapGestureRecognizer*)recognizer {
   //if already zoomed out - zoom in a bit
@@ -51,12 +50,10 @@ NS_ASSUME_NONNULL_BEGIN
   }
 }
 
-
 - (void)viewDidAppear:(BOOL)animated {
   NSLog(@"DetailsPhotoViewController::viewDidAppear");
   [super viewDidAppear:animated];
 }
-
 
 - (void)viewDidLayoutSubviews {
   NSLog(@"DetailsPhotoViewController::viewDidLayoutSubviews");
@@ -121,7 +118,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 }
 
-
 - (void)centerScrollViewContents {
   CGSize scrollViewSize = [self scrollViewVisibleSize];
   // First assume that image center coincides with the contents box center.
@@ -130,7 +126,6 @@ NS_ASSUME_NONNULL_BEGIN
                                     self.scrollView.contentSize.height/2.0);
   
   CGPoint scrollViewCenter = [self scrollViewCenter];
-  
   
   //if image is smaller than the scrollView visible size - fix the image center accordingly
   if (self.scrollView.contentSize.width < scrollViewSize.width) {
@@ -143,8 +138,6 @@ NS_ASSUME_NONNULL_BEGIN
   
   self.imageView.center = imageCenter;
 }
-
-
 
 - (void)aspectFitImage {
   CGSize scrollViewSize = [self scrollViewVisibleSize];
@@ -162,17 +155,13 @@ NS_ASSUME_NONNULL_BEGIN
   [self.scrollView setZoomScale:self.scrollView.minimumZoomScale animated:NO];
 
   self.imageView.center = [self scrollViewCenter];
-
 }
-
-
 
 //return the scroll view center
 - (CGPoint)scrollViewCenter {
   CGSize scrollViewSize = [self scrollViewVisibleSize];
   return CGPointMake(scrollViewSize.width/2.0, scrollViewSize.height/2.0);
 }
-
 
 - (CGSize) scrollViewVisibleSize {
   UIEdgeInsets contentInset = self.scrollView.contentInset;
@@ -190,7 +179,6 @@ NSString *StrCGPoint(CGPoint p) {
   return [NSString stringWithFormat:@"{%d, %d}", (int)p.x, (int)p.y];
 }
 
-
 NSString *StrCGRect(CGRect r) {
   return [NSString stringWithFormat:@"o - {%d, %d}, s - {%d, %d}", (int)r.origin.x, (int)r.origin.y,
               (int)r.size.width, (int)r.size.height];
@@ -200,12 +188,10 @@ NSString *StrCGSize(CGSize s) {
   return [NSString stringWithFormat:@"size width %d, height %d", (int)s.width, (int)s.height];
 }
 
-
 NSString *StrUIEdgeInsets(UIEdgeInsets ei) {
-  return [NSString stringWithFormat:@"insets: top - %d, left %d, right %d bottom %d", (int)ei.top, (int)ei.left,
-          (int)ei.right, (int)ei.bottom];
+  return [NSString stringWithFormat:@"insets: top - %d, left %d, right %d bottom %d", (int)ei.top,
+              (int)ei.left, (int)ei.right, (int)ei.bottom];
 }
-
 
 @end
 

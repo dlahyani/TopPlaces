@@ -16,21 +16,17 @@
     return [NSURL URLWithString:query];
 }
 
-
 + (NSURL *)URLforTopPlaces {
     return [self URLForQuery:@"https://api.flickr.com/services/rest/?method=flickr.places.getTopPlacesList&place_type_id=7"];
 }
-
 
 + (NSURL *)URLforPhotosInPlace:(id)flickrPlaceId maxResults:(int)maxResults {
     return [self URLForQuery:[NSString stringWithFormat:@"https://api.flickr.com/services/rest/?method=flickr.photos.search&place_id=%@&per_page=%d&extras=original_format,tags,description,geo,date_upload,owner_name,place_url", flickrPlaceId, maxResults]];
 }
 
-
 + (NSURL *)URLforRecentGeoreferencedPhotos {
     return [self URLForQuery:[NSString stringWithFormat:@"https://api.flickr.com/services/rest/?method=flickr.photos.search&license=1,2,4,7&has_geo=1&extras=original_format,description,geo,date_upload,owner_name"]];
 }
-
 
 + (NSString *)urlStringForPhoto:(NSDictionary *)photo format:(FlickrPhotoFormat)format {
 	id farm = [photo objectForKey:@"farm"];
@@ -54,16 +50,13 @@
 	return [NSString stringWithFormat:@"http://farm%@.static.flickr.com/%@/%@_%@_%@.%@", farm, server, photo_id, secret, formatString, fileType];
 }
 
-
 + (NSURL *)URLforPhoto:(NSDictionary *)photo format:(FlickrPhotoFormat)format {
     return [NSURL URLWithString:[self urlStringForPhoto:photo format:format]];
 }
 
-
 + (NSURL *)URLforInformationAboutPlace:(id)flickrPlaceId {
     return [self URLForQuery:[NSString stringWithFormat:@"https://api.flickr.com/services/rest/?method=flickr.places.getInfo&place_id=%@", flickrPlaceId]];
 }
-
 
 #define FLICKR_PLACE_NEIGHBORHOOD_NAME @"place.neighbourhood._content"
 #define FLICKR_PLACE_NEIGHBORHOOD_PLACE_ID @"place.neighbourhood.place_id"

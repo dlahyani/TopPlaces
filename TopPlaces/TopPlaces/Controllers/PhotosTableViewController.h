@@ -4,6 +4,7 @@
 #import "PlacesPhotosProvider.h"
 
 NS_ASSUME_NONNULL_BEGIN
+
 /// Abstract VC class for presenting a list of photos
 @interface PhotosTableViewController : UITableViewController
 
@@ -16,6 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// provided by the parent controller, provides a way to download images and image lists
 @property (strong, nonatomic) id<PlacesPhotosProvider> placesPhotosProvider;
+
 @end
 
 NS_ASSUME_NONNULL_END

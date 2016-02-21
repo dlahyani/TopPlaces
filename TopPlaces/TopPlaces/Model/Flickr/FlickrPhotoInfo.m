@@ -22,20 +22,15 @@ NS_ASSUME_NONNULL_BEGIN
   return self;
 }
 
-
-
 - (void)encodeWithCoder:(NSCoder *)aCoder {
   [aCoder encodeObject:self.photoData];
 }
-
 
 - (nullable instancetype)initWithCoder:(NSCoder *)aDecoder {
   id photoData = [aDecoder decodeObject];
   self = [self initWithDictionary:photoData];
   return self;
 }
-
-
 
 - (NSString *)title {
   NSString *photoTitle =  [self.photoData valueForKeyPath:FLICKR_PHOTO_TITLE];
@@ -47,7 +42,6 @@ NS_ASSUME_NONNULL_BEGIN
   }
   return photoTitle;
 }
-
 
 - (NSString *)details {
   NSString *photoDetails =  [self.photoData valueForKeyPath:FLICKR_PHOTO_DESCRIPTION];
@@ -61,7 +55,6 @@ NS_ASSUME_NONNULL_BEGIN
   }
   return photoDetails;
 }
-
 
 - (NSURL *)url {
   NSURL *photoUrl = [FlickrFetcher URLforPhoto:self.photoData format:FlickrPhotoFormatOriginal];

@@ -8,9 +8,11 @@
 #import "AppDelegate.h"
 
 NS_ASSUME_NONNULL_BEGIN
+
 @interface RecentPhotosTableViewController()  <UISplitViewControllerDelegate>
 
 @end
+
 @implementation RecentPhotosTableViewController
 #pragma mark -
 #pragma mark UIView overrides
@@ -40,7 +42,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)viewWillAppear:(BOOL)animated {
   [super viewWillAppear:animated];
   
-  
   //history updates frequently so we want to udpate every time we show images
   [self fetchPhotos];
 }
@@ -63,7 +64,6 @@ NS_ASSUME_NONNULL_BEGIN
   self.photosInfo = [PhotosHistory historyArray];
   [self.tableView reloadData];
 }
-
 
 @end
 

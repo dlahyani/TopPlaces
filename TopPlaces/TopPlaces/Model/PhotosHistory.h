@@ -18,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// Returns the items that were added history recently
 + (NSArray<id<PhotoInfo>>*)historyArray;
+
 @end
 
 NS_ASSUME_NONNULL_END

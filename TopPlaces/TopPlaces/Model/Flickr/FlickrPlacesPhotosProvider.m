@@ -8,8 +8,8 @@
 #import "FlickrPlaceInfo.h"
 
 NS_ASSUME_NONNULL_BEGIN
-
 @implementation FlickrPlacesPhotosProvider
+
 - (NSURLSessionDownloadTask *)downloadPlacesWithCompletionHandler:
         (void(^)(NSArray<id<PlaceInfo>> *placesInfo, NSError *error))downloadCompleteBlock {
   //download and convert places to array
@@ -37,7 +37,6 @@ NS_ASSUME_NONNULL_BEGIN
   return task;
 }
 
-
 - (NSURLSessionDownloadTask *)downloadPhotosInfoForPlace:(id<PlaceInfo>)placeInfo
                                           withMaxResults:(NSUInteger)maxResults
                                         completionHandler:(void(^)(NSArray<id<PhotoInfo>> *photosInfo,
@@ -62,7 +61,6 @@ NS_ASSUME_NONNULL_BEGIN
              downloadCompleteBlock(photosInfo, error);
            }];
   return task;
-  
 }
 
 - (NSArray<id<PhotoInfo>> *)convertPhotosDataToInfoArray:(NSArray *)photosData {
@@ -73,7 +71,6 @@ NS_ASSUME_NONNULL_BEGIN
   }
   return photosInfo;
 }
-
 
 - (NSURLSessionDownloadTask *)downloadPhoto:(id<PhotoInfo>)photoInfo
                            completionHandler:(void(^)(UIImage *img,
@@ -96,7 +93,6 @@ NS_ASSUME_NONNULL_BEGIN
               }];
   return task;
 }
-
 
 /// common function used in the interface implementation
 - (NSURLSessionDownloadTask *)downloadDataFromUrl:(NSURL *)url
@@ -125,6 +121,5 @@ NS_ASSUME_NONNULL_BEGIN
   return getDataTask;
 }
 @end
-
 
 NS_ASSUME_NONNULL_END
