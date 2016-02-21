@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (weak, nonatomic) IBOutlet UILabel *noImageLoadedView;
 @property (strong, nonatomic) UIImageView *imageView;
 @property (strong, nonatomic) NSURLSessionTask *downloadTask;
+
 @end
 
 @implementation DetailsPhotoViewController
@@ -113,10 +114,7 @@ NS_ASSUME_NONNULL_BEGIN
                                }
                                
                                weakSelf.title = weakSelf.photoInfo.title;
-                               
                                weakSelf.imageView = [[UIImageView alloc] initWithImage:img];
-                               weakSelf.imageView.frame = CGRectMake(0, 0, img.size.width, img.size.height);
-                               
                                [weakSelf.scrollView addSubview:weakSelf.imageView];
                                weakSelf.scrollView.contentSize = weakSelf.imageView.bounds.size;
                              }];
@@ -125,30 +123,31 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 - (void)centerScrollViewContents {
-  CGPoint imageViewCenter = self.imageView.center;
-  //we image size after scroll's view transform - thus we take the frame
-  CGSize imageViewSize = CGRectStandardize(self.imageView.frame).size;
-  CGSize scrollViewSize = CGRectStandardize(self.scrollView.bounds).size;
+  CGSize scrollViewSize = [self scrollViewVisibleSize];
+  // First assume that image center coincides with the contents box center.
+  // This is correct when the image is bigger than scrollView due to zoom
+  CGPoint imageCenter = CGPointMake(self.scrollView.contentSize.width/2.0,
+                                    self.scrollView.contentSize.height/2.0);
   
   CGPoint scrollViewCenter = [self scrollViewCenter];
   
-  //touch the center only if scrollView exceeds the image
   
-  if (imageViewSize.width <= scrollViewSize.width) {
-    imageViewCenter.x = scrollViewCenter.x;
+  //if image is smaller than the scrollView visible size - fix the image center accordingly
+  if (self.scrollView.contentSize.width < scrollViewSize.width) {
+    imageCenter.x = scrollViewCenter.x;
   }
   
-  if (imageViewSize.height <= scrollViewSize.height) {
-    imageViewCenter.y = scrollViewCenter.y;
+  if (self.scrollView.contentSize.height < scrollViewSize.height) {
+    imageCenter.y = scrollViewCenter.y;
   }
   
-  //this will put the image in the center and add the padding as needed
-  self.imageView.center = imageViewCenter;
+  self.imageView.center = imageCenter;
 }
 
 
+
 - (void)aspectFitImage {
-  CGSize scrollViewSize = CGRectStandardize(self.scrollView.bounds).size;
+  CGSize scrollViewSize = [self scrollViewVisibleSize];
   CGSize imageSize = CGRectStandardize(self.imageView.bounds).size;
   
   CGFloat scaleWidth = scrollViewSize.width / imageSize.width;
@@ -161,20 +160,26 @@ NS_ASSUME_NONNULL_BEGIN
   
   //start zoomed out and centered
   [self.scrollView setZoomScale:self.scrollView.minimumZoomScale animated:NO];
-  
 
   self.imageView.center = [self scrollViewCenter];
+
 }
+
 
 
 //return the scroll view center
 - (CGPoint)scrollViewCenter {
-  CGSize scrollViewSize = CGRectStandardize(self.scrollView.bounds).size;
+  CGSize scrollViewSize = [self scrollViewVisibleSize];
+  return CGPointMake(scrollViewSize.width/2.0, scrollViewSize.height/2.0);
+}
+
+
+- (CGSize) scrollViewVisibleSize {
   UIEdgeInsets contentInset = self.scrollView.contentInset;
-  CGFloat centerX = (scrollViewSize.width - contentInset.left - contentInset.right)/2.0;
-  CGFloat centerY = (scrollViewSize.height - contentInset.top - contentInset.bottom)/2.0;
-  
-  return CGPointMake(centerX, centerY);
+  CGSize scrollViewSize = CGRectStandardize(self.scrollView.bounds).size;
+  CGFloat width = scrollViewSize.width - contentInset.left - contentInset.right;
+  CGFloat height = scrollViewSize.height - contentInset.top - contentInset.bottom;
+  return CGSizeMake(width, height);
 }
 
 #pragma mark -
@@ -189,6 +194,16 @@ NSString *StrCGPoint(CGPoint p) {
 NSString *StrCGRect(CGRect r) {
   return [NSString stringWithFormat:@"o - {%d, %d}, s - {%d, %d}", (int)r.origin.x, (int)r.origin.y,
               (int)r.size.width, (int)r.size.height];
+}
+
+NSString *StrCGSize(CGSize s) {
+  return [NSString stringWithFormat:@"size width %d, height %d", (int)s.width, (int)s.height];
+}
+
+
+NSString *StrUIEdgeInsets(UIEdgeInsets ei) {
+  return [NSString stringWithFormat:@"insets: top - %d, left %d, right %d bottom %d", (int)ei.top, (int)ei.left,
+          (int)ei.right, (int)ei.bottom];
 }
 
 
