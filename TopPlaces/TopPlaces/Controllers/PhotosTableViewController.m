@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void) fetchPhotos {
   //abstract
-  assert(0);
+  NSAssert(NO, @"fetchPhotos implementation is required in the child class");
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(nullable id)sender {

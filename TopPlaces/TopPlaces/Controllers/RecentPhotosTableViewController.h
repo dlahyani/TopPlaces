@@ -7,7 +7,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// Presents list of photos based on the PhotosHistory contents
 @interface RecentPhotosTableViewController : PhotosTableViewController
-
 @end
 
 NS_ASSUME_NONNULL_END

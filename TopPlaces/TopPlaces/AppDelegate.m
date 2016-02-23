@@ -9,18 +9,30 @@
 #import "AppDelegate.h"
 
 #import "FlickrPlacesPhotosProvider.h"
+#import "NSUserDefaultsPhotosHistory.h"
 
 @interface AppDelegate ()
-
 @end
 
+
 @implementation AppDelegate
+
+@synthesize placesPhotosProvider = _placesPhotosProvider;
 
 - (id<PlacesPhotosProvider>)placesPhotosProvider {
   if (!_placesPhotosProvider) {
     _placesPhotosProvider = [[FlickrPlacesPhotosProvider alloc] init];
   }
   return _placesPhotosProvider;
+}
+
+@synthesize photosHistory = _photosHistory;
+
+- (id<PhotosHistory>)photosHistory {
+  if (!_photosHistory) {
+    _photosHistory = [[NSUserDefaultsPhotosHistory alloc] init];
+  }
+  return _photosHistory;
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {

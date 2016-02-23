@@ -1,10 +1,5 @@
-//
-//  PrefixHeader.pch
-//  TopPlaces
-//
-//  Created by Gennadi Iosad on 11/02/2016.
-//  Copyright © 2016 LightricksNoobsDepartment. All rights reserved.
-//
+// Copyright (c) 2016 Lightricks. All rights reserved.
+// Created by Gennadi Iosad.
 
 #ifndef PrefixHeader_pch
 #define PrefixHeader_pch

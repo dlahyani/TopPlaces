@@ -7,12 +7,14 @@
 //
 
 #import "PlacesPhotosProvider.h"
+#import "PhotosHistory.h"
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 
-@property (strong, nonatomic) id<PlacesPhotosProvider> placesPhotosProvider;
+@property (strong, nonatomic, readonly) id<PlacesPhotosProvider> placesPhotosProvider;
+@property (strong, nonatomic, readonly) id<PhotosHistory> photosHistory;
 
 @end
 

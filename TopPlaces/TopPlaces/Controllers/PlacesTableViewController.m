@@ -4,17 +4,22 @@
 #import "PlacesTableViewController.h"
 
 #import "TopPhotosTableViewController.h"
+#import "DetailsPhotoViewController.h"
 #import "AppDelegate.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface PlacesTableViewController() <UISplitViewControllerDelegate>
 
+/// Map with country as key and associated places list as value
+/// Used for presentation.
 @property (strong, nonatomic) NSDictionary *countryToPlacesMap;
 
-@property (strong, nonatomic) NSArray<NSString*> *sortedContries;
+/// Sorted list of contries to present as sections
+@property (strong, nonatomic) NSArray<NSString*> *sortedCountries;
 
-@property (strong, nonatomic) NSURLSessionTask *downloadTask;
+/// The task recieved from placesPhotosProvider, can be used to cancel the network activity
+@property (strong, nonatomic) id<CancellableTask> downloadTask;
 
 @end
 
@@ -48,9 +53,8 @@ NS_ASSUME_NONNULL_BEGIN
   self.splitViewController.preferredDisplayMode = UISplitViewControllerDisplayModeAllVisible;
 }
 
-- (void) viewDidDisappear:(BOOL)animated {
-  [super viewDidDisappear:animated];
-  NSLog(@"PlacesTableViewController::viewDidDisappear");
+- (void) dealloc {
+  NSLog(@"PlacesTableViewController::dealloc");
   [self.downloadTask cancel];
 }
 
@@ -67,41 +71,33 @@ NS_ASSUME_NONNULL_BEGIN
   [self.refreshControl beginRefreshing];
   __weak PlacesTableViewController *weakSelf = self;
   self.downloadTask =
-      [self.placesPhotosProvider downloadPlacesWithCompletionHandler:
+      [self.placesPhotosProvider downloadPlacesWithCompletion:
             ^(NSArray<id<PlaceInfo>> *placesInfo, NSError *error) {
-              
               [weakSelf.refreshControl endRefreshing];
-
-              if (!placesInfo || error) {
-                return;
+              if (placesInfo && !error) {
+                [weakSelf showPlaces:placesInfo];
               }
-              
-              // convert the flat list to country->places map
-              NSDictionary *placesMap = [PlacesTableViewController
-                                         contriesMappingForPlacesArray:placesInfo];
-              
-              //sort the countries list
-              NSArray *sortedCountries = [placesMap.allKeys sortedArrayUsingComparator:
-                                          ^NSComparisonResult(id a, id b) {
-                                            NSString *first = (NSString *)a;
-                                            NSString *second = (NSString *)b;
-                                            return [first compare:second];
-                                          }];
-              
-              // update UI:
-              weakSelf.countryToPlacesMap = placesMap;
-              weakSelf.sortedContries = sortedCountries;
-              [weakSelf.tableView reloadData];
             }];
 }
 
+- (void) showPlaces:(NSArray<id<PlaceInfo>> *)placesInfo {
+  // convert the flat list to country->places map
+  NSDictionary *placesMap = [PlacesTableViewController
+                             contriesMappingForPlacesArray:placesInfo];
+  
+  //sort the countries list
+  NSArray *sortedCountries = [placesMap.allKeys sortedArrayUsingSelector:@selector(compare:)];
+  
+  // update UI:
+  self.countryToPlacesMap = placesMap;
+  self.sortedCountries = sortedCountries;
+  [self.tableView reloadData];
+}
 // convert the places list to the country->places map
 + (NSDictionary *)contriesMappingForPlacesArray:(NSArray<id<PlaceInfo>> *)places {
   NSMutableDictionary *countryToPlacesMap = [[NSMutableDictionary alloc] init];
   for (id<PlaceInfo> place in places) {
-    
     //add the place under the corresponding country key
-    
     if (![countryToPlacesMap objectForKey:place.country]) {
       countryToPlacesMap[place.country] = [[NSMutableArray alloc] init];
     }
@@ -112,13 +108,7 @@ NS_ASSUME_NONNULL_BEGIN
   // sort places for each country
   for (NSString *country in countryToPlacesMap.allKeys) {
     NSArray *places = countryToPlacesMap[country];
-    NSArray *sortedPlaces = [places sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
-      id<PlaceInfo> aPlace = (id<PlaceInfo>)a;
-      id<PlaceInfo> bPlace = (id<PlaceInfo>)b;
-      
-      return [aPlace compare:bPlace];
-    }];
-    
+    NSArray *sortedPlaces = [places sortedArrayUsingSelector:@selector(compare:)];
     countryToPlacesMap[country] = sortedPlaces;
   }
 
@@ -136,7 +126,7 @@ NS_ASSUME_NONNULL_BEGIN
     NSIndexPath *path = [self.tableView indexPathForCell:(UITableViewCell *)sender];
     
     //set the placeInfo for the incoming VC
-    NSString *country = self.sortedContries[path.section];
+    NSString *country = self.sortedCountries[path.section];
     tpvc.placeInfo = self.countryToPlacesMap[country][path.row];
     
     //propagate the placePhotosProvider
@@ -145,20 +135,20 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 #pragma mark -
-#pragma mark table view controller overrides
+#pragma mark UITableViewDataSource
 #pragma mark -
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-  return [self.sortedContries count];
+  return [self.sortedCountries count];
 }
 
 - (nullable NSString *)tableView:(UITableView *)tableView
          titleForHeaderInSection:(NSInteger)section {
-  return self.sortedContries[section];
+  return self.sortedCountries[section];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-  NSString *country = self.sortedContries[section];
+  NSString *country = self.sortedCountries[section];
   return [self.countryToPlacesMap[country] count];
 }
 
@@ -167,7 +157,7 @@ NS_ASSUME_NONNULL_BEGIN
   UITableViewCell *cell;
   cell = [self.tableView dequeueReusableCellWithIdentifier:@"FlickrPlacesCell"];
   
-  NSString *country = self.sortedContries[indexPath.section];
+  NSString *country = self.sortedCountries[indexPath.section];
   id<PlaceInfo> placeInfo = self.countryToPlacesMap[country][indexPath.row];
   cell.textLabel.text = placeInfo.title;
   cell.detailTextLabel.text = placeInfo.details;
@@ -175,13 +165,25 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 #pragma mark -
-#pragma mark split view delegates
+#pragma mark UISplitViewControllerDelegate
 #pragma mark -
 
 - (BOOL)splitViewController:(UISplitViewController *)splitViewController
-    collapseSecondaryViewController:(UIViewController *)secondaryViewController
-    ontoPrimaryViewController:(UIViewController *)primaryViewController {
-  return YES; //show master view by default
+          collapseSecondaryViewController:(UIViewController *)secondaryViewController
+                ontoPrimaryViewController:(UIViewController *)primaryViewController {
+  //if details photo view controller has an image to show - show it and not the master view
+  if ([secondaryViewController isKindOfClass:[UINavigationController class]]) {
+    UINavigationController *navigationController = (UINavigationController *)secondaryViewController;
+    if ([navigationController.childViewControllers[0] isKindOfClass:
+            [DetailsPhotoViewController class]]) {
+      DetailsPhotoViewController *detailsPhotoViewController =
+            (DetailsPhotoViewController *)navigationController.childViewControllers[0];
+      if (detailsPhotoViewController.photoInfo) {
+        return NO;
+      }
+    }
+  }
+  return YES; //otherwise show the master view
 }
 
 @end

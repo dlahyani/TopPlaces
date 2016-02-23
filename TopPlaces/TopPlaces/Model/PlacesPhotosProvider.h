@@ -1,44 +1,16 @@
 // Copyright (c) 2016 Lightricks. All rights reserved.
 // Created by Gennadi Iosad.
 
+#import "PlacesInfo.h"
+#import "PhotosInfo.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
-/// Abstraction for a place description that can be presented to the user
-@protocol PlaceInfo<NSObject>
+//Cancellable download task returned by PlacesPhotosProvider
+@protocol CancellableTask <NSObject>
 
-
-/// Returns the URL to download the list of the photos from the place,
-/// the list length is bounded by \c maxLength
-- (NSURL*)urlOfPhotoInfoArrayWithMaxLength:(NSUInteger)maxLength;
-
-/// Compares to another instance of PlaceInfo conforming object
-- (NSComparisonResult)compare:(id<PlaceInfo>)other;
-
-/// Returns the title of the place
-@property (nonatomic, readonly) NSString *title;
-
-/// Returns additional details of the place
-@property (nonatomic, readonly) NSString *details;
-
-/// Returns the country of the place
-@property (nonatomic, readonly) NSString *country;
-
-@end
-
-
-
-/// Photo information absraction
-@protocol PhotoInfo<NSCoding>
-
-/// Returns the title of the image
-@property (nonatomic, readonly) NSString *title;
-
-
-/// Returns the details - auxillary info of the image
-@property (nonatomic, readonly) NSString *details;
-
-/// Returns the url for downloading the image
-@property (nonatomic, readonly) NSURL *url;
+/// cancel download in progress, completion handler will be called with error
+- (void) cancel;
 
 @end
 
@@ -46,23 +18,30 @@ NS_ASSUME_NONNULL_BEGIN
 /// Places and image lists provider abtraction
 @protocol PlacesPhotosProvider
 
+typedef void (^DownloadPlacesCompleteBlock)(NSArray<id<PlaceInfo>> *placesInfo, NSError *error);
+
 /// Download the places list
-- (NSURLSessionDownloadTask *)downloadPlacesWithCompletionHandler:
-        (void(^)(NSArray<id<PlaceInfo>> *placesInfo, NSError *error))downloadCompleteBlock;
+- (id<CancellableTask>)downloadPlacesWithCompletion:
+                          (DownloadPlacesCompleteBlock)downloadCompleteBlock;
 
-
+/// Recieves \c photosInfo containing the array of photo's info and a possible error.
+/// If the download succeeds \c error will be nil otherwise the \c photosInfo will be nil
+typedef void (^DownloadPhotosInfoCompleteBlock) ( NSArray<id<PhotoInfo>> * _Nullable photosInfo,
+                                                 NSError * _Nullable error);
 
 /// Download the photos list of the specific \c placeInfo
-- (NSURLSessionDownloadTask *)downloadPhotosInfoForPlace:(id<PlaceInfo>)placeInfo
+- (id<CancellableTask>)downloadPhotosInfoForPlace:(id<PlaceInfo>)placeInfo
                                           withMaxResults:(NSUInteger)maxResults
-                                        completionHandler:
-                                              (void(^)(NSArray<id<PhotoInfo>> *photosInfo,
-                                                       NSError *error))downloadCompleteBlock;
+                                          withCompletion:
+                                              (DownloadPhotosInfoCompleteBlock)downloadCompleteBlock;
+
+/// Recieves \c img image instance of photo to download and a possible error.
+/// If the download succeeds \c error will be nil otherwise the \c img will be nil
+typedef void(^DownloadPhotoCompleteBlock)(UIImage * _Nullable img, NSError * _Nullable error);
 
 /// Download the photo linked from \c photoInfo
-- (NSURLSessionDownloadTask *)downloadPhoto:(id<PhotoInfo>)photoInfo
-                           completionHandler:(void(^)(UIImage *img,
-                                                      NSError *error))downloadCompleteBlock;
+- (id<CancellableTask>)downloadPhoto:(id<PhotoInfo>)photoInfo
+                      withCompletion:(DownloadPhotoCompleteBlock)downloadCompleteBlock;
 
 @end
 

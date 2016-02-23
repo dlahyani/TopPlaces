@@ -9,7 +9,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface PhotosTableViewController : UITableViewController
 
 /// abstract function that populates the photosInfo from some source.
-- (void) fetchPhotos;
+- (void)fetchPhotos;
 
 /// The list of photo's data in the Flickr format
 /// To be read only once fetchPhotos was invoked.

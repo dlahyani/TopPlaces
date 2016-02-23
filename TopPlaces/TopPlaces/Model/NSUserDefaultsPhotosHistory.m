@@ -1,20 +1,20 @@
 // Copyright (c) 2016 Lightricks. All rights reserved.
 // Created by Gennadi Iosad.
 
-#import "PhotosHistory.h"
+#import "NSUserDefaultsPhotosHistory.h"
 
 #import "FlickrFetcher.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-#define PHOTOS_HISTORY_PREF_KEY @"history"
+static NSString * const kPhotosHistoryPrefKey =  @"history";
 static const int kHistoryLogLength = 20;
 
-@implementation PhotosHistory
+@implementation NSUserDefaultsPhotosHistory
 
-+ (NSArray<id<PhotoInfo>>*)historyArray {
+- (NSArray<id<PhotoInfo>>*)historyArray {
   NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-  NSData *encodedPhotos = [prefs objectForKey:PHOTOS_HISTORY_PREF_KEY];
+  NSData *encodedPhotos = [prefs objectForKey:kPhotosHistoryPrefKey];
   NSArray *photos = nil;
   
   if (encodedPhotos) {
@@ -27,8 +27,8 @@ static const int kHistoryLogLength = 20;
   return photos;
 }
 
-+ (void)addPhotoInfo:(id<PhotoInfo>)photoInfo {
-  NSMutableArray *photos = [[PhotosHistory historyArray] mutableCopy];
+- (void)addPhotoInfo:(id<PhotoInfo>)photoInfo {
+  NSMutableArray *photos = [[self historyArray] mutableCopy];
   
   // if the photoInfo is already in the NSUserDefaults, delete it
   NSUInteger key = [photos indexOfObjectPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
@@ -50,7 +50,7 @@ static const int kHistoryLogLength = 20;
   // set the photos back in the NSUserDefault
   NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
   NSData *encodedPhotos = [NSKeyedArchiver archivedDataWithRootObject:photos];
-  [prefs setObject:encodedPhotos forKey:PHOTOS_HISTORY_PREF_KEY];
+  [prefs setObject:encodedPhotos forKey:kPhotosHistoryPrefKey];
   [prefs synchronize];
 }
 

@@ -4,9 +4,14 @@
 #import "TopPhotosTableViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
+
 @interface TopPhotosTableViewController ()
-@property (strong, nonatomic) NSURLSessionTask *downloadTask;
+
+/// The task recieved from placesPhotosProvider, can be used to cancel the network activity
+@property (strong, nonatomic) id<CancellableTask> downloadTask;
+
 @end
+
 @implementation TopPhotosTableViewController
 
 #pragma mark -
@@ -27,9 +32,8 @@ NS_ASSUME_NONNULL_BEGIN
   [self fetchPhotos];
 }
 
-- (void) viewDidDisappear:(BOOL)animated {
-  [super viewDidDisappear:animated];
-  NSLog(@"TopPhotosTableViewController::viewDidDisappear");
+- (void) dealloc {
+  NSLog(@"TopPhotosTableViewController::dealloc");
   [self.downloadTask cancel];
 }
 
@@ -49,16 +53,16 @@ NS_ASSUME_NONNULL_BEGIN
   //download the photos info
   self.downloadTask = [self.placesPhotosProvider
                        downloadPhotosInfoForPlace:self.placeInfo
-                         withMaxResults:50
-                       completionHandler:^(NSArray<id<PhotoInfo>> *photosInfo, NSError *error) {
-                         // update UI
-                         [weakSelf.refreshControl endRefreshing];
-                         if (!photosInfo || error) {
-                           return;
-                         }
-                         weakSelf.photosInfo = photosInfo;
-                         [weakSelf.tableView reloadData];
-                       }];
+                                   withMaxResults:50
+                                   withCompletion:^(NSArray<id<PhotoInfo>> *photosInfo,
+                                                    NSError *error) {
+                                     // update UI
+                                     [weakSelf.refreshControl endRefreshing];
+                                     if (photosInfo && !error) {
+                                       weakSelf.photosInfo = photosInfo;
+                                       [weakSelf.tableView reloadData];
+                                     }
+                                   }];
 }
 
 @end

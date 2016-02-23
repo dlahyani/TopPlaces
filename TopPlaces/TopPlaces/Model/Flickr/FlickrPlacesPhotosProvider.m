@@ -6,60 +6,66 @@
 #import "FlickrFetcher.h"
 #import "FlickrPhotoInfo.h"
 #import "FlickrPlaceInfo.h"
+#import "FlickrCancellableTask.h"
 
 NS_ASSUME_NONNULL_BEGIN
+
 @implementation FlickrPlacesPhotosProvider
 
-- (NSURLSessionDownloadTask *)downloadPlacesWithCompletionHandler:
-        (void(^)(NSArray<id<PlaceInfo>> *placesInfo, NSError *error))downloadCompleteBlock {
+- (id<CancellableTask>)downloadPlacesWithCompletion:
+        (DownloadPlacesCompleteBlock)downloadCompleteBlock {
   //download and convert places to array
   NSURL *url = [FlickrFetcher URLforTopPlaces];
 
-  NSURLSessionDownloadTask *task =
-  [self downloadDataFromUrl:url
-          completionHandler:^(NSData *data, NSError *error) {
-            NSMutableArray *placesInfo = nil;
-            if (data && !error) {
-              NSDictionary *propertyListResults = [NSJSONSerialization JSONObjectWithData:data
-                                                                                  options:0
-                                                                                    error:NULL];
-              
-              NSArray *placesData = [propertyListResults valueForKeyPath:FLICKR_RESULTS_PLACES];
-              if (placesData) {
-                placesInfo = [[NSMutableArray alloc] initWithCapacity:[placesData count]];
-                for (NSDictionary *d in placesData) {
-                  [placesInfo addObject:[[FlickrPlaceInfo alloc] initWithDictionary:d]];
-                }
-              }
+  id<CancellableTask> task =
+      [self downloadDataFromUrl:url withCompletion:^(NSData *data, NSError *error) {
+        NSMutableArray *placesInfo = nil;
+        if (data && !error) {
+          NSDictionary *propertyListResults = [NSJSONSerialization JSONObjectWithData:data
+                                                                              options:0
+                                                                                error:NULL];
+          
+          NSArray *placesData = [propertyListResults valueForKeyPath:FLICKR_RESULTS_PLACES];
+          if (placesData) {
+            placesInfo = [[NSMutableArray alloc] initWithCapacity:[placesData count]];
+            for (NSDictionary *d in placesData) {
+              [placesInfo addObject:[[FlickrPlaceInfo alloc] initWithDictionary:d]];
             }
-            downloadCompleteBlock(placesInfo, error);
-          }];
+          }
+        }
+        if (downloadCompleteBlock) {
+          downloadCompleteBlock(placesInfo, error);
+        }
+      }];
+  
   return task;
 }
 
-- (NSURLSessionDownloadTask *)downloadPhotosInfoForPlace:(id<PlaceInfo>)placeInfo
-                                          withMaxResults:(NSUInteger)maxResults
-                                        completionHandler:(void(^)(NSArray<id<PhotoInfo>> *photosInfo,
-                                                              NSError *error))downloadCompleteBlock{
+- (id<CancellableTask>)downloadPhotosInfoForPlace:(id<PlaceInfo>)placeInfo
+                                   withMaxResults:(NSUInteger)maxResults
+                                   withCompletion:
+                                        (DownloadPhotosInfoCompleteBlock)downloadCompleteBlock{
   // download the photos list info and convert it array
   NSURL *url = [placeInfo urlOfPhotoInfoArrayWithMaxLength:maxResults];
   
-  NSURLSessionDownloadTask *task =
-      [self downloadDataFromUrl:url
-           completionHandler:^(NSData *data, NSError *error) {
-             NSArray<id<PhotoInfo>> *photosInfo = nil;
-             if (data && !error) {
-               NSDictionary *propertyListResults = [NSJSONSerialization JSONObjectWithData:data
-                                                                                   options:0
-                                                                                     error:NULL];
-               NSArray *photosData = [propertyListResults valueForKeyPath:FLICKR_RESULTS_PHOTOS];
-               if (photosData) {
-                 photosInfo = [self convertPhotosDataToInfoArray:photosData];
-               }
-             }
-             
-             downloadCompleteBlock(photosInfo, error);
-           }];
+  id<CancellableTask> task =
+      [self downloadDataFromUrl:url withCompletion:^(NSData * _Nullable data,
+                                                     NSError * _Nullable error) {
+        NSArray<id<PhotoInfo>> *photosInfo = nil;
+        if (data && !error) {
+          NSDictionary *propertyListResults = [NSJSONSerialization JSONObjectWithData:data
+                                                                              options:0
+                                                                                error:NULL];
+          
+          NSArray *photosData = [propertyListResults valueForKeyPath:FLICKR_RESULTS_PHOTOS];
+          if (photosData) {
+            photosInfo = [self convertPhotosDataToInfoArray:photosData];
+          }
+        }
+        if (downloadCompleteBlock) {
+          downloadCompleteBlock(photosInfo, error);
+        }
+      }];
   return task;
 }
 
@@ -72,9 +78,8 @@ NS_ASSUME_NONNULL_BEGIN
   return photosInfo;
 }
 
-- (NSURLSessionDownloadTask *)downloadPhoto:(id<PhotoInfo>)photoInfo
-                           completionHandler:(void(^)(UIImage *img,
-                                                     NSError *error))downloadCompleteBlock{
+- (id<CancellableTask>)downloadPhoto:(id<PhotoInfo>)photoInfo
+                      withCompletion:(DownloadPhotoCompleteBlock)downloadCompleteBlock{
   
   NSURL *photoUrl = photoInfo.url;
   
@@ -82,22 +87,24 @@ NS_ASSUME_NONNULL_BEGIN
     return nil;
   }
 
-  NSURLSessionDownloadTask *task =
+  id<CancellableTask> task =
       [self downloadDataFromUrl:photoUrl
-              completionHandler:^(NSData *data, NSError *error) {
+              withCompletion:^(NSData * _Nullable data, NSError * _Nullable error) {
                 UIImage *img = nil;
                 if (data && !error) {
                   img = [UIImage imageWithData:data];
                 }
-                downloadCompleteBlock(img, error);
+                if (downloadCompleteBlock) {
+                  downloadCompleteBlock(img, error);
+                }
               }];
   return task;
 }
 
 /// common function used in the interface implementation
-- (NSURLSessionDownloadTask *)downloadDataFromUrl:(NSURL *)url
-                             completionHandler:(void(^)(NSData *data,
-                                                        NSError *error))downloadCompleteBlock{
+- (id<CancellableTask>)downloadDataFromUrl:(NSURL *)url
+                             withCompletion:(void(^)(NSData * _Nullable data,
+                                                     NSError * _Nullable error))downloadCompleteBlock{
   NSURLSession *session = [NSURLSession sharedSession];
   
   NSURLSessionDownloadTask *getDataTask =
@@ -110,15 +117,17 @@ NS_ASSUME_NONNULL_BEGIN
                      //get data from the temporary storage
                      data = [NSData dataWithContentsOfURL:location];
                    }
-                   dispatch_async(dispatch_get_main_queue(), ^{
-                     NSLog(@"data download complete %p", data);
-                     downloadCompleteBlock(data, error);
-                   });
+                   if (downloadCompleteBlock) {
+                     dispatch_async(dispatch_get_main_queue(), ^{
+                       NSLog(@"data download complete %p", data);
+                       downloadCompleteBlock(data, error);
+                     });
+                   }
                  }];
   
   NSLog(@"data download started");
   [getDataTask resume];
-  return getDataTask;
+  return [[FlickrCancellableTask alloc ] initWithDownloadTask:getDataTask];
 }
 @end
 

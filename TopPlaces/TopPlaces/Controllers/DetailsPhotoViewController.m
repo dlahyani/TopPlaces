@@ -4,20 +4,26 @@
 #import "DetailsPhotoViewController.h"
 
 #import "PhotosHistory.h"
+#import "AppDelegate.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface DetailsPhotoViewController() <UIScrollViewDelegate>
 
+/// Image download activity indicator
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *spinner;
 
+/// Scroll view to contain the downloaded image
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 
+/// Text message that should be presented
 @property (weak, nonatomic) IBOutlet UILabel *noImageLoadedView;
 
+/// imageView to be presented in the scrollView
 @property (strong, nonatomic) UIImageView *imageView;
-@property (strong, nonatomic) NSURLSessionTask *downloadTask;
 
+/// Image download task returned by the placesPhotosProvider
+@property (strong, nonatomic) id<CancellableTask> downloadTask;
 
 @end
 
@@ -30,17 +36,22 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)viewDidLoad {
   [super viewDidLoad];
   self.scrollView.delegate = self;
-  UITapGestureRecognizer *doubleTapRecognizer =
-      [[UITapGestureRecognizer alloc] initWithTarget:self
-                                              action:@selector(scrollViewDoubleFingerTapped:)];
-  doubleTapRecognizer.numberOfTapsRequired = 2;
-  doubleTapRecognizer.numberOfTouchesRequired = 1;
-  [self.scrollView addGestureRecognizer:doubleTapRecognizer];
+  [self setupDoubleTapRecognizer];
   [self loadImage];
   NSLog(@"DetailsPhotoViewController::viewDidLoad self %p", self);
 }
 
-- (void)scrollViewDoubleFingerTapped:(UITapGestureRecognizer*)recognizer {
+- (void)setupDoubleTapRecognizer {
+  UITapGestureRecognizer *doubleTapRecognizer =
+  [[UITapGestureRecognizer alloc] initWithTarget:self
+                                          action:@selector(scrollViewDoubleTapped:)];
+  doubleTapRecognizer.numberOfTapsRequired = 2;
+  doubleTapRecognizer.numberOfTouchesRequired = 1;
+  [self.scrollView addGestureRecognizer:doubleTapRecognizer];
+  
+}
+
+- (void)scrollViewDoubleTapped:(UITapGestureRecognizer*)recognizer {
   //if already zoomed out - zoom in a bit
   if (self.scrollView.zoomScale == self.scrollView.minimumZoomScale) {
     [self.scrollView setZoomScale:self.scrollView.zoomScale*2 animated:YES];
@@ -48,11 +59,6 @@ NS_ASSUME_NONNULL_BEGIN
     //zoom out
     [self.scrollView setZoomScale:self.scrollView.minimumZoomScale animated:YES];
   }
-}
-
-- (void)viewDidAppear:(BOOL)animated {
-  NSLog(@"DetailsPhotoViewController::viewDidAppear");
-  [super viewDidAppear:animated];
 }
 
 - (void)viewDidLayoutSubviews {
@@ -64,14 +70,13 @@ NS_ASSUME_NONNULL_BEGIN
   }
 }
 
-- (void) viewDidDisappear:(BOOL)animated {
-  [super viewDidDisappear:animated];
-  NSLog(@"DetailsPhotoViewController::viewDidDisappear");
+- (void) dealloc {
+  NSLog(@"DetailsPhotoViewController::dealloc");
   [self.downloadTask cancel];
 }
 
 #pragma mark -
-#pragma mark UIScrollViewDelegate impl
+#pragma mark UIScrollViewDelegate
 #pragma mark -
 
 - (nullable UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView {
@@ -84,7 +89,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 #pragma mark -
-#pragma mark aux logic
+#pragma mark Auxiliary Logic
 #pragma mark -
 
 - (void)loadImage {
@@ -93,7 +98,8 @@ NS_ASSUME_NONNULL_BEGIN
     return;
   }
 
-  [PhotosHistory addPhotoInfo:self.photoInfo];
+  AppDelegate *appDelegate = (AppDelegate*)[UIApplication sharedApplication].delegate;
+  [appDelegate.photosHistory addPhotoInfo:self.photoInfo];
   
   self.noImageLoadedView.hidden = YES;
   [self.spinner startAnimating];
@@ -101,21 +107,23 @@ NS_ASSUME_NONNULL_BEGIN
   __weak DetailsPhotoViewController *weakSelf = self;
   self.downloadTask =
       [self.placesPhotosProvider downloadPhoto:self.photoInfo
-                             completionHandler:^(UIImage *img, NSError *error) {
-                               [weakSelf.spinner stopAnimating];
-                               
-                               //if download failed
-                               if (!img || error) {
-                                 weakSelf.noImageLoadedView.hidden = NO;
-                                 return;
-                               }
-                               
-                               weakSelf.title = weakSelf.photoInfo.title;
-                               weakSelf.imageView = [[UIImageView alloc] initWithImage:img];
-                               [weakSelf.scrollView addSubview:weakSelf.imageView];
-                               weakSelf.scrollView.contentSize = weakSelf.imageView.bounds.size;
+                                withCompletion:^(UIImage *img, NSError *error) {
+                                  [weakSelf.spinner stopAnimating];
+                                  //if download failed
+                                  if (img && !error) {
+                                    [weakSelf showImage:img];
+                                  } else {
+                                    weakSelf.noImageLoadedView.hidden = NO;
+                                  }
                              }];
 
+}
+
+- (void)showImage:(UIImage *)image {
+  self.title = self.photoInfo.title;
+  self.imageView = [[UIImageView alloc] initWithImage:image];
+  [self.scrollView addSubview:self.imageView];
+  self.scrollView.contentSize = self.imageView.bounds.size;
 }
 
 - (void)centerScrollViewContents {
@@ -169,28 +177,6 @@ NS_ASSUME_NONNULL_BEGIN
   CGFloat width = scrollViewSize.width - contentInset.left - contentInset.right;
   CGFloat height = scrollViewSize.height - contentInset.top - contentInset.bottom;
   return CGSizeMake(width, height);
-}
-
-#pragma mark -
-#pragma mark for debug
-#pragma mark -
-
-NSString *StrCGPoint(CGPoint p) {
-  return [NSString stringWithFormat:@"{%d, %d}", (int)p.x, (int)p.y];
-}
-
-NSString *StrCGRect(CGRect r) {
-  return [NSString stringWithFormat:@"o - {%d, %d}, s - {%d, %d}", (int)r.origin.x, (int)r.origin.y,
-              (int)r.size.width, (int)r.size.height];
-}
-
-NSString *StrCGSize(CGSize s) {
-  return [NSString stringWithFormat:@"size width %d, height %d", (int)s.width, (int)s.height];
-}
-
-NSString *StrUIEdgeInsets(UIEdgeInsets ei) {
-  return [NSString stringWithFormat:@"insets: top - %d, left %d, right %d bottom %d", (int)ei.top,
-              (int)ei.left, (int)ei.right, (int)ei.bottom];
 }
 
 @end
