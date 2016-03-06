@@ -1,0 +1,59 @@
+// Copyright (c) 2016 Lightricks. All rights reserved.
+// Created by Gennadi Iosad.
+
+#import "PhotosTableViewController.h"
+
+#import "DetailsPhotoViewController.h"
+#import "PlacesPhotosProvider.h"
+
+NS_ASSUME_NONNULL_BEGIN
+
+@implementation PhotosTableViewController
+
+#pragma mark -
+#pragma mark UIViewController overrides
+#pragma mark - 
+
+- (void) fetchPhotos {
+  //abstract
+  NSAssert(NO, @"fetchPhotos implementation is required in the child class");
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(nullable id)sender {
+  if ([segue.identifier isEqualToString:@"showPhoto"]) {
+    NSLog(@"prepareForSegue: showPhoto");
+    UINavigationController *navigationController =
+        (UINavigationController *)segue.destinationViewController;
+    DetailsPhotoViewController *detailsPhotoViewController =
+        navigationController.viewControllers[0];
+    NSIndexPath *path = [self.tableView indexPathForCell:(UITableViewCell *)sender];
+    detailsPhotoViewController.photoInfo = self.photosInfo[path.row];
+    detailsPhotoViewController.placesPhotosProvider = self.placesPhotosProvider;
+  }
+}
+
+#pragma mark -
+#pragma mark UITableViewDataSource overrides
+#pragma mark -
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+  return [self.photosInfo count];
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView
+         cellForRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
+  UITableViewCell *cell;
+  cell = [self.tableView dequeueReusableCellWithIdentifier:@"FlickrPhotoCell"];
+  id<PhotoInfo> photoInfo = self.photosInfo[indexPath.row];
+  NSString *photoTitle =  photoInfo.title;
+  NSString *photoDetails = photoInfo.details;
+  
+  cell.textLabel.text = photoTitle;
+  cell.detailTextLabel.text = photoDetails;
+  
+  return cell;
+}
+
+@end
+
+NS_ASSUME_NONNULL_END

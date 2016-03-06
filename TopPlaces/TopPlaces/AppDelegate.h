@@ -6,12 +6,15 @@
 //  Copyright © 2016 LightricksNoobsDepartment. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "PlacesPhotosProvider.h"
+#import "PhotosHistory.h"
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 
+@property (strong, nonatomic, readonly) id<PlacesPhotosProvider> placesPhotosProvider;
+@property (strong, nonatomic, readonly) id<PhotosHistory> photosHistory;
 
 @end
 
